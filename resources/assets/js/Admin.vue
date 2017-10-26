@@ -16,13 +16,13 @@
                         </div>
                         <ul class="menu">
                             <li class="active">
-                                <router-link to="home"><i class="ion-ios-folder"></i>工资导入</router-link>
+                                <router-link to="import"><i class="ion-ios-folder"></i>工资导入</router-link>
                             </li>
                             <li>
-                                <router-link to="admin"><i class="el-icon-date"></i>日志查看</router-link>
+                                <router-link to="log"><i class="el-icon-date"></i>日志查看</router-link>
                             </li>
                             <li>
-                                <router-link to="admin"><i class="el-icon-setting"></i>修改密码</router-link>
+                                <router-link to="change"><i class="el-icon-setting"></i>修改密码</router-link>
                             </li>
                         </ul>
                         <div class="logout">
