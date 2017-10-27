@@ -11,10 +11,11 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-	.js('resources/assets/js/Login.js', 'public/js')
+mix.js('resources/assets/js/admin/app.js', 'public/js/admin.js')
+    .js('resources/assets/js/home/app.js', 'public/js/wx.js')
     .extract(['vue', 'element-ui', 'vue-router'])
     .sass('resources/assets/sass/admin.scss', 'public/css')
+    .sass('resources/assets/sass/wx.scss', 'public/css')
     mix.copy('resources/assets/img/', 'public/img/');
 if (mix.config.inProduction) {
     mix.version();

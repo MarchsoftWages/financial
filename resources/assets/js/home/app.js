@@ -7,7 +7,7 @@
 
 require('../bootstrap');
 
-import App from "./Admin.vue"
+import App from "./Home.vue"
 import router from './router'
 import ElementUI from "element-ui"
 import { filters } from './filter'

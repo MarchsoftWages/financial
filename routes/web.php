@@ -12,6 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('login');
+    return view('index');
+});
+Route::get('/wx', function () {
+    return view('wx_index');
 });
 include('admin.php');
