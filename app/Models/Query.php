@@ -6,6 +6,6 @@ class Query
 {
     public static function get_user()
     {
-        
+
     }
 }
