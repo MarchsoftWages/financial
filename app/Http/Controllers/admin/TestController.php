@@ -9,6 +9,6 @@ class TestController extends Controller
     public function test()
     {
         $result = Admin::get_user();
-        dump($result);
+        return responseToJson(0,'success',$result);
     }
 }

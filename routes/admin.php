@@ -1,3 +1,4 @@
 <?php
 
-Route::get("test", 'admin\TestController@test');
+Route::get("/admin/test", 'admin\TestController@test');
+Route::get("/home/test", 'home\QueryController@test');
