@@ -12,6 +12,6 @@
 */
 
 Route::get('/', function () {
-    return view('login');
+    return view('index');
 });
 include('admin.php');

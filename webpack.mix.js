@@ -12,7 +12,6 @@ let mix = require('laravel-mix');
  */
 
 mix.js('resources/assets/js/app.js', 'public/js')
-	.js('resources/assets/js/Login.js', 'public/js')
     .extract(['vue', 'element-ui', 'vue-router'])
     .sass('resources/assets/sass/admin.scss', 'public/css')
     mix.copy('resources/assets/img/', 'public/img/');
