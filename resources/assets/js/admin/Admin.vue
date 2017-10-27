@@ -5,8 +5,7 @@
                 <td class="sidebar" style="width: 200px;" id="navleft">
                     <div style="background-color:#2F4050;height: 100%;width: 200px;">
                         <div class="logo">
-                            test<br>
-                            test1
+                            工资管理系统
                         </div>
                         <div class="user">
                             <img :src="user.avatar">
@@ -16,7 +15,7 @@
                         </div>
                         <ul class="menu">
                             <li class="active">
-                                <router-link to="import"><i class="ion-ios-folder"></i>工资导入</router-link>
+                                <router-link to="/"i class="ion-ios-folder"></i>工资导入</router-link>
                             </li>
                             <li>
                                 <router-link to="log"><i class="el-icon-date"></i>日志查看</router-link>
