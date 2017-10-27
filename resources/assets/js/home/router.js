@@ -13,12 +13,18 @@ export default new VueRouter({
         {
             name: "index",
             path: '/log',
-            component: resolve =>void(require(['./admin/Log.vue'], resolve))
+            component: resolve =>void(require(['./app/Log.vue'], resolve))
         },
         {
             name: "index",
             path: '/change',
-            component: resolve =>void(require(['./admin/Change.vue'], resolve))
+            component: resolve =>void(require(['./app/Change.vue'], resolve))
+        },
+        //微信路由模块
+        {
+            name: "wx_home",
+            path: '/wx/home',
+            component: resolve =>void(require(['../home/Home.vue'], resolve))
         },
     ]
 })
