@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </td>
-                <td style="background-color: #EEEEEE;height: 100%;" valign="top">
+                <td style="background-color: #EEEEEE;height: 100%;" valign="center">
                     <router-view></router-view>
                 </td>
             </tr>
