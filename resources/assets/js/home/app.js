@@ -12,6 +12,7 @@ import router from './router'
 import ElementUI from "element-ui"
 import { filters } from './filter'
 import 'element-ui/lib/theme-default/index.css'
+import  { ToastPlugin } from 'vux'
 
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
@@ -20,6 +21,7 @@ Object.keys(filters).forEach(key => {
 require("es6-promise").polyfill()
 
 Vue.use(ElementUI);
+Vue.use(ToastPlugin);
 
 Vue.prototype.send_request = function (meth,url,callback,data=null) {
     var self = this;
