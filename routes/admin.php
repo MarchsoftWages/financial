@@ -1,4 +1,4 @@
 <?php
 
-Route::get("/admin/test", 'admin\TestController@test');
+Route::post("/admin/upload", 'admin\PayController@saveExcel');
 Route::get("/home/test", 'home\QueryController@test');

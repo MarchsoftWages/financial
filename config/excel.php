@@ -54,7 +54,7 @@ return array(
         |--------------------------------------------------------------------------
         */
 
-        'dir'      => storage_path('cache')
+        'dir'      => storage_path('app/cache')
     ],
 
     'properties' => [
@@ -272,7 +272,7 @@ return array(
             | The path we want to save excel file to
             |
             */
-            'path'       => storage_path('exports'),
+            'path'       => storage_path('app/exports'),
 
             /*
             |--------------------------------------------------------------------------
