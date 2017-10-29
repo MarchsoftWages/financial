@@ -18,3 +18,4 @@ Route::get('/wx', function () {
     return view('wx_index');
 });
 include('admin.php');
+include('wx.php');
