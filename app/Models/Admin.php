@@ -2,7 +2,7 @@
 namespace app\Models;
 
 use DB;
-class Admin
+class Admin extends Models
 {
     public static function get_user()
     {
