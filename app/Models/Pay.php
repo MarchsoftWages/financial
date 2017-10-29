@@ -1,8 +1,10 @@
 <?php
-namespace app\Models;
+namespace App\Models;
 
 use DB;
-class Pay
+use Illuminate\Database\Eloquent\Model;
+
+class Pay extends Model
 {
     public static function get_user()
     {

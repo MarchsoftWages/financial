@@ -1,8 +1,11 @@
 <?php
-namespace app\Models;
+namespace App\Models;
 
 use DB;
-class Admin extends Models
+
+use Illuminate\Database\Eloquent\Model;
+
+class Admin extends Model
 {
     public static function get_user()
     {

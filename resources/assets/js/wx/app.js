@@ -7,12 +7,20 @@
 
 require('../bootstrap');
 
-import App from "./Home.vue"
+import App from "./App.vue"
 import router from './router'
 import ElementUI from "element-ui"
 import { filters } from './filter'
 import 'element-ui/lib/theme-default/index.css'
+
 import  { ToastPlugin } from 'vux'
+import  { AlertPlugin } from 'vux'
+import  { ConfirmPlugin } from 'vux'
+import  { LoadingPlugin } from 'vux'
+Vue.use(AlertPlugin)
+Vue.use(ConfirmPlugin)
+Vue.use(LoadingPlugin)
+Vue.use(ToastPlugin)
 
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
@@ -23,16 +31,6 @@ require("es6-promise").polyfill()
 Vue.use(ElementUI);
 Vue.use(ToastPlugin);
 
-Vue.prototype.send_request = function (meth,url,callback,data=null) {
-    var self = this;
-    axios({
-        'method':meth,
-        'url':url,
-        'data':data
-    }).then(function (response) {
-        callback(response,self);
-    })
-}
 
 Vue.component('remote-script', {
 
