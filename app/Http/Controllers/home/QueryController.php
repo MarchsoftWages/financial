@@ -30,6 +30,7 @@ class QueryController extends Controller
     }
 
     /**
+     * $data 近三个月份
      * 查询最近三个月的工资
      */
     public function get_three(Request $request)
@@ -42,14 +43,52 @@ class QueryController extends Controller
             if(strlen($value) == 1){
                 $data[] = '0'.$value;
             }else {
-                $data[] = $value;
+                $data[] = $value.'';
             }
         }
-        dump($data);
-        //$result = Query::get_three($job_num);
+        $result = Query::get_three($job_num,$data);
+        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
+    }
+
+    /**
+     * 查询某个月工资详情
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get_detail(Request $request)
+    {
+        $job_num = $request->job_num;
+        $month = $request->month;
+        $result = Query::get_current_wages($job_num,$month);
+        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
+    }
+
+    /**
+     * 获取全年的工资
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get_year(Request $request)
+    {
+        $job_num = $request->job_num;
+        $month = $request->month;
+        $result = Query::get_year_wages($job_num);
+        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
+    }
+
+    /**
+     * 自定义查询工资列表
+     */
+    public function get_query(Request $request)
+    {
+        $job_num = $request->job_num;
+        $start = strtotime($request->start);
+        $end = strtotime($request->end);
+        $result = Query::get_query($job_num,$start,$end);
+        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
     public function test()
     {
-        dump(count(10));
+        dump(date('Y',time()));
     }
 }

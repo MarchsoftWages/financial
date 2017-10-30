@@ -1,15 +1,7 @@
 <template>
     <div>
         <div class="head">
-            <x-header>工资查询<a :href="'/wx#/query/'+this.$route.params.job_num+'/'+this.$route.params.mobile" slot="right">查询</a></x-header>
-            <div class="button-tab">
-                <button-tab>
-                    <button-tab-item @click.native="getCurrent"> 当月 </button-tab-item>
-                    <button-tab-item @click.native="getPre"> 上月</button-tab-item>
-                    <button-tab-item selected> 近三月 </button-tab-item>
-                    <button-tab-item @click.native="getYear"> 全年 </button-tab-item>
-                </button-tab>
-            </div>
+            <x-header :left-options.preventGoBack="true" @on-click-back="back">查询结果</x-header>
         </div>
         <div class="wages">
             <group v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_month)">
@@ -19,7 +11,7 @@
                     <span class="total"> {{ item.first_pay['工资实发额'] }} </span>
                 </div>
             </group>
-            <div style="margin-top: 130px;">
+            <div style="margin-top: 80px;">
                 <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe" v-if="more"></load-more>
             </div>
         </div>
@@ -44,7 +36,7 @@
         text-decoration: none;
     }
     .wages{
-        margin-top: 100px;
+        margin-top: 60px;
     }
     .list{
         height: 25px;
@@ -63,7 +55,7 @@
     }
 </style>
 <script type="text/ecmascript-6">
-    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore } from 'vux'
+    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore  } from 'vux'
     export default {
         components:{
             XHeader,
@@ -83,11 +75,15 @@
         },
         computed: {},
         methods: {
-            getThree() {
+            getQuery() {
                 this.$vux.loading.show({
                     text: '加载中'
                 })
-                axios.post('/three/get',{job_num:this.$route.params.job_num}).then( res => {
+                axios.post('/query/get',{
+                    job_num:this.$route.params.job_num,
+                    start:this.$route.params.start,
+                    end:this.$route.params.end,
+                }).then( res => {
                     if(res.data.code == 0){
                         this.list = res.data.result
                         for (let i in this.list){
@@ -102,18 +98,13 @@
             detail(job_num,month) {
                 this.$router.push({path:'/detail/'+job_num+'/'+month})
             },
-            getCurrent() {
-                this.$router.push({path:'/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
-            },
-            getPre() {
-                this.$router.push({path:'/pre/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
-            },
-            getYear() {
-                this.$router.push({path:'/year/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
-            },
+            back() {
+                //自定义搜索页面返回按钮的链接地址
+                //this.$router.push({path:})
+            }
         },
         mounted() {
-            this.getThree()
+            this.getQuery()
         },
     }
 </script>

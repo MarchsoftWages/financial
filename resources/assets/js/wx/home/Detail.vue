@@ -1,18 +1,10 @@
 <template>
     <div>
         <div class="head">
-            <x-header>工资查询<a :href="'/wx#/query/'+this.$route.params.job_num+'/'+this.$route.params.mobile" slot="right">查询</a></x-header>
-            <div class="button-tab">
-                <button-tab>
-                    <button-tab-item  @click.native="getCurrent"> 当月 </button-tab-item>
-                    <button-tab-item selected> 上月</button-tab-item>
-                    <button-tab-item @click.native="getThreeMonth"> 近三月 </button-tab-item>
-                    <button-tab-item @click.native="getYear"> 全年 </button-tab-item>
-                </button-tab>
-            </div>
+            <x-header> <span v-if="info.pay_year">{{ info.pay_year + '-' + info.pay_month }} 工资详情</span></x-header>
         </div>
         <div class="wages">
-            <group v-if="!more">
+            <group>
                 <x-input title='岗位工资:' :value="wages['岗位工资']" readonly text-align="right"></x-input>
                 <x-input title='薪级工资:' :value="wages['薪级工资']" readonly text-align="right"></x-input>
                 <x-input title='保留福补:' :value="wages['保留福补']" readonly text-align="right"></x-input>
@@ -28,9 +20,6 @@
                 <x-input title='扣发合计:' :value="wages['扣发合计']" readonly text-align="right"></x-input>
                 <x-input title='工资实发额:' :value="wages['工资实发额']" readonly text-align="right"></x-input>
             </group>
-            <div style="margin-top: 130px;">
-                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe" v-if="more"></load-more>
-            </div>
         </div>
     </div>
 </template>
@@ -43,21 +32,12 @@
         background: white;
         overflow: hidden;
     }
-    .button-tab{
-        margin-top: 100px;
-        width: 90%;
-        margin: 0 auto;
-        margin-top: 13px;
-    }
-    .button-tab a{
-        text-decoration: none;
-    }
     .wages{
-        margin-top: 100px;
+        margin-top: 60px;
     }
 </style>
 <script type="text/ecmascript-6">
-    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore } from 'vux'
+    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput } from 'vux'
     export default {
         components:{
             XHeader,
@@ -66,43 +46,38 @@
             ButtonTabItem,
             Cell,
             Group,
-            XInput,
-            LoadMore
+            XInput
         },
         data(){
             return {
-                wages:[],
-                more: false
+                wages: [],
+                info: []
             }
         },
         computed: {},
         methods: {
-            getPre() {      //当月和上月的工资
+            getDetail() {      //当月和上月的工资
                 this.$vux.loading.show({
                     text: '加载中'
                 })
-                axios.post('/current/get',{job_num:this.$route.params.job_num,flag:2}).then( res => {
+                axios.post('/detail/get',{job_num:this.$route.params.job_num,month:this.$route.params.month}).then( res => {
                     if(res.data.code == 0){
                         res.data.result.first_pay = JSON.parse(res.data.result.first_pay)
                         this.wages = res.data.result.first_pay
-                    }else {
-                        this.more = true
+                        this.info = res.data.result
                     }
                     this.$vux.loading.hide()
                 })
             },
-            getCurrent() {
-                this.$router.push({path:'/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
+            getPre() {
+                this.$router.push({path:'/pre/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
             },
             getThreeMonth() {       //近三个月的工资
                 this.$router.push({path:'/three/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
             },
-            getYear() {
-                this.$router.push({path:'/year/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
-            },
         },
         mounted() {
-            this.getPre()
+            this.getDetail()
         },
     }
 </script>

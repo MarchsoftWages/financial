@@ -5,9 +5,9 @@
             <div class="button-tab">
                 <button-tab>
                     <button-tab-item @click.native="getCurrent"> 当月 </button-tab-item>
-                    <button-tab-item @click.native="getPre"> 上月</button-tab-item>
-                    <button-tab-item selected> 近三月 </button-tab-item>
-                    <button-tab-item @click.native="getYear"> 全年 </button-tab-item>
+                    <button-tab-item @click.native="getPrev"> 上月</button-tab-item>
+                    <button-tab-item @click.native="getThree"> 近三月 </button-tab-item>
+                    <button-tab-item selected> 全年 </button-tab-item>
                 </button-tab>
             </div>
         </div>
@@ -83,17 +83,17 @@
         },
         computed: {},
         methods: {
-            getThree() {
+            getYear() {
                 this.$vux.loading.show({
                     text: '加载中'
                 })
-                axios.post('/three/get',{job_num:this.$route.params.job_num}).then( res => {
+                axios.post('/year/get',{job_num:this.$route.params.job_num}).then( res => {
                     if(res.data.code == 0){
                         this.list = res.data.result
                         for (let i in this.list){
                             this.list[i].first_pay = JSON.parse(this.list[i].first_pay)
                         }
-                    }else {
+                    }else{
                         this.more = true
                     }
                     this.$vux.loading.hide()
@@ -105,15 +105,15 @@
             getCurrent() {
                 this.$router.push({path:'/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
             },
-            getPre() {
+            getPrev() {
                 this.$router.push({path:'/pre/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
             },
-            getYear() {
-                this.$router.push({path:'/year/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
+            getThree() {
+                this.$router.push({path:'/three/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
             },
         },
         mounted() {
-            this.getThree()
+            this.getYear()
         },
     }
 </script>

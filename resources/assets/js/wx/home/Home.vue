@@ -1,18 +1,18 @@
 <template>
     <div>
         <div class="head">
-            <x-header>工资查询</x-header>
+            <x-header>工资查询<a :href="'/wx#/query/'+this.$route.params.job_num+'/'+this.$route.params.mobile" slot="right">查询</a></x-header>
             <div class="button-tab">
                 <button-tab>
-                    <button-tab-item selected @click.native="getCurrentPrev(1)"> 当月 </button-tab-item>
+                    <button-tab-item selected> 当月 </button-tab-item>
                     <button-tab-item @click.native="getPre"> 上月</button-tab-item>
                     <button-tab-item @click.native="getThreeMonth"> 近三月 </button-tab-item>
-                    <button-tab-item> 全年 </button-tab-item>
+                    <button-tab-item @click.native="getYear"> 全年 </button-tab-item>
                 </button-tab>
             </div>
         </div>
         <div class="wages">
-            <group>
+            <group v-if="!more">
                 <x-input title='岗位工资:' :value="wages['岗位工资']" readonly text-align="right"></x-input>
                 <x-input title='薪级工资:' :value="wages['薪级工资']" readonly text-align="right"></x-input>
                 <x-input title='保留福补:' :value="wages['保留福补']" readonly text-align="right"></x-input>
@@ -28,6 +28,9 @@
                 <x-input title='扣发合计:' :value="wages['扣发合计']" readonly text-align="right"></x-input>
                 <x-input title='工资实发额:' :value="wages['工资实发额']" readonly text-align="right"></x-input>
             </group>
+            <div style="margin-top: 130px;">
+                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe" v-if="more"></load-more>
+            </div>
         </div>
     </div>
 </template>
@@ -54,7 +57,7 @@
     }
 </style>
 <script type="text/ecmascript-6">
-    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput } from 'vux'
+    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore } from 'vux'
     export default {
         components:{
             XHeader,
@@ -63,11 +66,13 @@
             ButtonTabItem,
             Cell,
             Group,
-            XInput
+            XInput,
+            LoadMore
         },
         data(){
             return {
                 wages:[],
+                more: false
             }
         },
         computed: {},
@@ -80,7 +85,8 @@
                     if(res.data.code == 0){
                         res.data.result.first_pay = JSON.parse(res.data.result.first_pay)
                         this.wages = res.data.result.first_pay
-                        console.log(this.wages)
+                    }else{
+                        this.more = true
                     }
                     this.$vux.loading.hide()
                 })
@@ -90,6 +96,9 @@
             },
             getThreeMonth() {       //近三个月的工资
                 this.$router.push({path:'/three/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
+            },
+            getYear() {
+                this.$router.push({path:'/year/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
             },
         },
         mounted() {
