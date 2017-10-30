@@ -4,7 +4,7 @@
             <x-header> <span v-if="info.pay_year">{{ info.pay_year + '-' + info.pay_month }} 工资详情</span></x-header>
         </div>
         <div class="wages">
-            <group>
+            <group v-if="!more">
                 <x-input title='岗位工资:' :value="wages['岗位工资']" readonly text-align="right"></x-input>
                 <x-input title='薪级工资:' :value="wages['薪级工资']" readonly text-align="right"></x-input>
                 <x-input title='保留福补:' :value="wages['保留福补']" readonly text-align="right"></x-input>
@@ -20,6 +20,9 @@
                 <x-input title='扣发合计:' :value="wages['扣发合计']" readonly text-align="right"></x-input>
                 <x-input title='工资实发额:' :value="wages['工资实发额']" readonly text-align="right"></x-input>
             </group>
+            <div style="margin-top: 80px;" v-if="more">
+                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
+            </div>
         </div>
     </div>
 </template>
@@ -37,7 +40,7 @@
     }
 </style>
 <script type="text/ecmascript-6">
-    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput } from 'vux'
+    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore } from 'vux'
     export default {
         components:{
             XHeader,
@@ -46,12 +49,14 @@
             ButtonTabItem,
             Cell,
             Group,
-            XInput
+            XInput,
+            LoadMore
         },
         data(){
             return {
                 wages: [],
-                info: []
+                info: [],
+                more: false
             }
         },
         computed: {},
@@ -65,6 +70,8 @@
                         res.data.result.first_pay = JSON.parse(res.data.result.first_pay)
                         this.wages = res.data.result.first_pay
                         this.info = res.data.result
+                    }else {
+                        this.more = true
                     }
                     this.$vux.loading.hide()
                 })

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="head">
-            <x-header :left-options.preventGoBack="true" @on-click-back="back">查询结果</x-header>
+            <x-header>查询结果</x-header>
         </div>
         <div class="wages">
             <group v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_month)">
@@ -11,8 +11,8 @@
                     <span class="total"> {{ item.first_pay['工资实发额'] }} </span>
                 </div>
             </group>
-            <div style="margin-top: 80px;">
-                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe" v-if="more"></load-more>
+            <div style="margin-top: 80px;" v-if="more">
+                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
             </div>
         </div>
     </div>
@@ -98,10 +98,6 @@
             detail(job_num,month) {
                 this.$router.push({path:'/detail/'+job_num+'/'+month})
             },
-            back() {
-                //自定义搜索页面返回按钮的链接地址
-                //this.$router.push({path:})
-            }
         },
         mounted() {
             this.getQuery()

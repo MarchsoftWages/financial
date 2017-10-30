@@ -28,8 +28,8 @@
                 <x-input title='扣发合计:' :value="wages['扣发合计']" readonly text-align="right"></x-input>
                 <x-input title='工资实发额:' :value="wages['工资实发额']" readonly text-align="right"></x-input>
             </group>
-            <div style="margin-top: 130px;">
-                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe" v-if="more"></load-more>
+            <div style="margin-top: 130px;" v-if="more">
+                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
             </div>
         </div>
     </div>

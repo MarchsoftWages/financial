@@ -38,7 +38,7 @@ export default new VueRouter({
         },
         {
             name: "list",
-            path: '/list/:job_num/:start/:end',
+            path: '/list/:job_num/:mobile/:start/:end',
             component: resolve =>void(require(['./home/List.vue'], resolve))
         },
     ]

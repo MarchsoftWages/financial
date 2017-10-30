@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="head">
-            <x-header>工资查询<a :href="'/wx#/query/'+this.$route.params.job_num+'/'+this.$route.params.mobile" slot="right">查询</a></x-header>
+            <x-header>工资查询<a :href="'/wx#/query/'+this.$route.params.job_num+'/'+this.$route.params.mobile" slot="right">查询</a>
+            </x-header>
             <div class="button-tab">
                 <button-tab>
                     <button-tab-item @click.native="getCurrent"> 当月 </button-tab-item>
@@ -19,8 +20,8 @@
                     <span class="total"> {{ item.first_pay['工资实发额'] }} </span>
                 </div>
             </group>
-            <div style="margin-top: 130px;">
-                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe" v-if="more"></load-more>
+            <div style="margin-top: 80px;" v-if="more">
+                <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
             </div>
         </div>
     </div>

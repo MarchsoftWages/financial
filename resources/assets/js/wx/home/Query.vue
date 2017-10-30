@@ -75,7 +75,7 @@
         computed: {},
         methods: {
             query() {
-                this.$router.push({path:'/list/'+this.$route.params.job_num+'/'+this.start+'/'+this.end})
+                this.$router.push({path:'/list/'+this.$route.params.job_num+'/'+this.$route.params.mobile+'/'+this.start+'/'+this.end})
             },
         },
         mounted() {
