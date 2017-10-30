@@ -20,5 +20,4 @@ Route::get('/wx', function () {
 Route::get('captcha/{tmp}','admin\codeController@get_captcha');
 Route::get('login','admin\codeController@get_vaild');
 include('admin.php');
-include('admin.php');
 include('wx.php');
