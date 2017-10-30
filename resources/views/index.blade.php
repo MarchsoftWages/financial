@@ -10,9 +10,6 @@
     <title>{{ config('app.name')  }}</title>
     @include('analysis')
 </head>
-<style>
-
-</style>
 <body>
 <div id="app">
 

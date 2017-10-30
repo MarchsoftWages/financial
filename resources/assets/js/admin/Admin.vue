@@ -15,7 +15,7 @@
                         </div>
                         <ul class="menu">
                             <li class="active">
-                                <router-link to="/"i class="ion-ios-folder"></i>工资导入</router-link>
+                                <router-link to="/index"><i class="ion-ios-folder"></i>工资导入</router-link>
                             </li>
                             <li>
                                 <router-link to="log"><i class="el-icon-date"></i>日志查看</router-link>
@@ -75,7 +75,7 @@
     }
 
     .logo {
-        background: url('/img/admin/logo-bg.png');
+        background: url('../../img/admin/logo-bg.png');
         height: 100px;
         color: white;
         font-weight: bolder;
