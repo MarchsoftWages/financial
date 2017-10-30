@@ -2,7 +2,9 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PayController extends Controller
 {
@@ -15,7 +17,18 @@ class PayController extends Controller
             $ext = $file->getClientOriginalExtension();    //文件拓展名
             $type = $file->getClientMimeType(); //文件类型
             $realPath = $file->getRealPath();   //临时文件的绝对路径
-            $bool = Storage::disk('app/public')->put($originalName,file_get_contents($realPath));   //传成功返回bool值
+            $bool = Storage::disk('uploads')->put($originalName,file_get_contents($realPath));   //传成功返回bool值
+            if ($bool){
+                $strArr=explode(".",$originalName);
+                $this->import($strArr[0],$strArr[1]);
+            }
         }
 	}
+    public function import($fileName,$fileType){
+        $filePath = 'storage/app/uploads/'.iconv('utf-8', 'gbk', $fileName).".".$fileType;
+        Excel::load($filePath, function($reader) {
+            $data = $reader->all();
+            dd($data);
+        });
+    }
 }
