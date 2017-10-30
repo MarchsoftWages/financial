@@ -18,6 +18,10 @@ Route::get('/wx', function () {
     return view('wx_index');
 });
 Route::get('captcha/{tmp}','admin\codeController@get_captcha');
+
+// Route::post('login','admin\LoginController@get_vaild');
+
+
 Route::get('login','admin\codeController@get_vaild');
 include('admin.php');
 include('wx.php');

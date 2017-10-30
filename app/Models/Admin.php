@@ -9,7 +9,7 @@ class Admin extends Model
 {
     public static function get_user()
     {
-        $user = DB::table('user')->get();
+        $user = DB::table('admin')->get();
         return !$user->isEmpty() ? $user : 0;
     }
 }
