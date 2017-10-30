@@ -64,8 +64,12 @@
              */
             uploadSuccess (response, file, fileList) {
                 this.loadingInstance.close();
+                if(response.code==1){
+                    this.$message.error(response.data);
+                    return;
+                }
                 this.$message({message: '上传成功', type: 'success'});
-                console.log(response)
+                console.log(response.result)
             },
             /**
              * 上传错误

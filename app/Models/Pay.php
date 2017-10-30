@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pay extends Model
 {
-    public static function get_user()
+
+    public static function addExcel($data)
     {
 
+        DB::table('pay')->insert($data);
     }
+
+
 }
