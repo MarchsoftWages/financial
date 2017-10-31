@@ -1,7 +1,7 @@
 <?php
 
-
 namespace App\Http\Middleware;
+
 use Closure;
 class login
 {
@@ -12,9 +12,6 @@ class login
             return $next($request);
         }
         return redirect('index');
-
-
-
     }
 
 }
