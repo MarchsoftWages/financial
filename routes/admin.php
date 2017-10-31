@@ -2,7 +2,6 @@
 
 Route::post('login','admin\LoginController@get_vaild');
 Route::group(['middleware'=>['login']],function(){
-
 Route::get('/back_index', function () {
     return view('index');
 });
