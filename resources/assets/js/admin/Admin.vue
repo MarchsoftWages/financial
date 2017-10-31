@@ -3,7 +3,7 @@
         <table style="width: 100%;height: 100%;" cellpadding="0" cellspacing="0">
             <tr>
                 <td class="sidebar" style="width: 200px;" id="navleft">
-                    <div style="background-color:#2F4050;height: 100%;width: 200px;">
+                    <div style="background-color:#2F4050;height: 600px;width: 200px;">
                         <div class="logo">
                             工资管理系统
                         </div>
@@ -75,7 +75,7 @@
     }
 
     .logo {
-        background: url('../../img/admin/logo-bg.png');
+        background: url('/img/admin/logo-bg.png');
         height: 100px;
         color: white;
         font-weight: bolder;
