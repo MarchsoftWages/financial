@@ -66,12 +66,12 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
+            @if (Route::has('checkLogin'))
                 <div class="top-right links">
                     @if (Auth::check())
                         <a href="{{ url('wx') }}">Home</a>
                     @else
-                        <a href="{{ url('/login') }}">Login</a>
+                        <a href="{{ url('checkLogin') }}">Login</a>
                         <a href="{{ url('/register') }}">Register</a>
                     @endif
                 </div>

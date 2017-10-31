@@ -102,7 +102,7 @@ table{
 	</div>
 	  @endif
 	<div class="form">
-		<form onsubmit="return toVaild()" enctype="multipart/form-data"  method="post" action="{{url('login')}}">
+		<form onsubmit="return toVaild()" enctype="multipart/form-data"  method="post" action="{{url('checkLogin')}}">
 		{{csrf_field()}}
 		<div class="login"><h2>系统登录</h2></div>
 		 <table>                                                              

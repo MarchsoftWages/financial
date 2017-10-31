@@ -19,9 +19,9 @@ Route::get('/wx', function () {
 });
 Route::get('captcha/{tmp}','admin\codeController@get_captcha');
 
-// Route::post('login','admin\LoginController@get_vaild');
+// Route::post('checkLogin','admin\LoginController@get_vaild');
 
 
-Route::get('login','admin\codeController@get_vaild');
+Route::post('checkLogin','admin\LoginController@get_vaild');
 include('admin.php');
 include('wx.php');

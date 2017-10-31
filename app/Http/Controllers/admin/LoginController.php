@@ -41,13 +41,16 @@ class LoginController extends Controller
 
         if(($name==$user_name)&&($password==md5(md5($user_password)))){
             if(Session::get('milkcaptcha')==$user_captcha){
-                session(['login' => 'true']);
+                session(['checkLogin' => 'true']);
                 return redirect('/back_index');
             }else{
-                 return  redirect()->back()->with('wrro',"验证码输入错误")->withInput();
+                 return  $this->returnError('wrro',"验证码输入错误");
             }
         }else{
-            return  redirect()->back()->with('wrro',"用户名或密码输入错误")->withInput();
+            return  $this->returnError('wrro',"用户名或密码输入错误");
         }
 	}
+    function returnError($messge,$info){
+        return  redirect()->back()->with($messge,$info)->withInput();
+    }
 }
