@@ -11,6 +11,10 @@ use Input;
 
 class LoginController extends Controller
 {
+
+  /**
+  登录验证
+  **/
     public function get_vaild(Request $request){
         $user= Admin::get_user();
         foreach ($user as $key ) {
@@ -53,4 +57,36 @@ class LoginController extends Controller
     function returnError($messge,$info){
         return  redirect()->back()->with($messge,$info)->withInput();
     }
+
+    function modify(Request $request){
+          if ($request->isMethod('post')) {
+            // $this->validate($request,[
+            //   'ruleForm2.oldpass'=>'regex:/^\w{6,}$/',
+            //   'ruleForm2.Pass'=>'regex:/^\w{6,}$/',
+            //   ],[
+            //   'ruleForm2.oldpass.regex'=>':attribute输入格式错误',
+            //   'ruleForm2.Pass.regex'=>':attribute输入格式错误',
+            //   ]，[
+            //   'ruleForm2.oldpass'=>'密码',
+            //   'ruleForm2.Pass'=>'密码',
+            //   ]);
+            $oldpass=$request->oldpass;
+            $password=$request->pass;
+            $newpass=$request->newpass;
+            $user= Admin::get_user();
+              foreach ($user as $key ) {
+                 $checkpass=$key->password;
+              }
+              if ($checkpass==md5(md5($oldpass))) {
+                 if ($password==$newpass) {
+                  $bool= Admin::set_password(md5(md5($oldpass)));
+                  var_dump($bool);
+                 }
+              }
+             
+          }
+
+
+    }
+
 }
