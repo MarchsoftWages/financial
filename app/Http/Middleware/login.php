@@ -7,7 +7,7 @@ class login
 {
 
     public  function handle($request,Closure $next){
-      $val=session('login','0');
+      $val=session('checkLogin','0');
         if($val){
             return $next($request);
         }

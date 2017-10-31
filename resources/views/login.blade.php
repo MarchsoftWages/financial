@@ -61,7 +61,7 @@ table{
 <body>
 <div class="top">
 	<div class="form">
-		<form onsubmit="return toVaild()" enctype="multipart/form-data"  method="post" action="{{url('login')}}">
+		<form onsubmit="return toVaild()" enctype="multipart/form-data"  method="post" action="{{url('checkLogin')}}">
 		{{csrf_field()}}
 		 <table>                                                              
 		 	<tr><div class="login">用户登录</div></tr>

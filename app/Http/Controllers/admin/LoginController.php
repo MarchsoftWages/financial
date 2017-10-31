@@ -39,7 +39,7 @@ class LoginController extends Controller
        
         if(($name==$user_name)&&($password==md5(md5($user_password)))){
             if(Session::get('milkcaptcha')==$user_captcha){
-                session(['login' => 'true']);
+                session(['checkLogin' => 'true']);
                 var_dump("aaa");
                 // return redirect('/back_index');
             }
