@@ -6,7 +6,7 @@ Route::group(['middleware'=>['login']],function(){
     	return view('index');
 	});
 Route::post("/admin/upload", 'admin\PayController@saveExcel');
-
+Route::post("/modify_password",'admin\LoginController@modify');
 });
 
 
