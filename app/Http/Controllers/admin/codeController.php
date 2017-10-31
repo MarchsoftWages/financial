@@ -16,12 +16,10 @@ class codeController extends Controller{
 	public function get_captcha($temp){
 		$builder=new CaptchaBuilder();
 		$builder ->build(100,32);
-		$phrase = $builder->getPhrase();
+		$phrase = $builder->getPhrase();  // 获取验证码内容
 		Session::flash('milkcaptcha',$phrase);
 		ob_clean();
 		return response($builder->output())->header('Content-type','image/jpeg');
 	}
-	public function get_vaild(Request $request){
-       
-	}
+	
 }

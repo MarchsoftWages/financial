@@ -4,10 +4,9 @@
                    :action="importFileUrl"
                    :data="upLoadData"
                    :headers="headers"
-                   :onError="uploadError"
-                   :onSuccess="uploadSuccess"
-                   :beforeUpload="beforeAvatarUpload"
-          multiple>
+                   :on-error="uploadError"
+                   :on-success="uploadSuccess"
+                   :before-upload="beforeAvatarUpload">
             <div class="el-upload__text"><h2 style="color:black;">第一批次工资报表上传</h2></div>
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -17,10 +16,9 @@
                    :action="importFileUrl"
                    :data="upLoadData"
                    :headers="headers"
-                   :onError="uploadError"
-                   :onSuccess="uploadSuccess"
-                   :beforeUpload="beforeAvatarUpload"
-          multiple>
+                   :on-error="uploadError"
+                   :on-success="uploadSuccess"
+                   :before-upload="beforeAvatarUpload">
             <div class="el-upload__text"><h2 style="color:black;">第二批次工资报表上传</h2></div>
             <i class="el-icon-upload"></i>
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -58,17 +56,35 @@
 
         },
         methods: {
-            // 上传成功后的回调
-
+            /**
+             * 上传成功后的回调
+             * @param response
+             * @param file
+             * @param fileList
+             */
             uploadSuccess (response, file, fileList) {
                 this.loadingInstance.close();
+                if(response.code==1){
+                    this.$message.error(response.data);
+                    return;
+                }
                 this.$message({message: '上传成功', type: 'success'});
+                console.log(response.result)
             },
-            // 上传错误
+            /**
+             * 上传错误
+             * @param response
+             * @param file
+             * @param fileList
+             */
             uploadError (response, file, fileList) {
                 this.$message.error('上传失败，请重试！');
             },
-            // 上传前对文件的大小的判断
+            /**
+             * 上传前对文件的大小的判断
+             * @param file
+             * @returns {boolean}
+             */
             beforeAvatarUpload (file) {
                 const extension = file.name.split('.')[1] === 'xls'
                 const extension2 = file.name.split('.')[1] === 'xlsx'
