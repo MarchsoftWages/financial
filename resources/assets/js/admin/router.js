@@ -10,10 +10,6 @@ export default new VueRouter({
             path: '/',
             component: resolve =>void(require(['./Home.vue'], resolve)),
         },
-        // {
-        //     path: "*",
-        //     redirect: '/index'
-        // },
         {
             name: "日志查看",
             path: '/log',

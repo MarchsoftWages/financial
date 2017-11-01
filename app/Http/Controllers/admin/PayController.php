@@ -10,6 +10,14 @@ use Maatwebsite\Excel\Facades\Excel;
 class PayController extends Controller
 {
     /**
+     * 设定中国时间
+     * PayController constructor.
+     */
+    public function __construct(){
+        date_default_timezone_set('PRC');
+    }
+
+    /**
      * 保存上传文件
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -18,6 +26,8 @@ class PayController extends Controller
 
         $file = $request->file('file');
         $cpyId = $request->cpyId;
+        $flag = time();
+
         if($file->isValid()){	//判断文件是否上传成功
             $originalName = $file->getClientOriginalName(); //源文件名
             $ext = $file->getClientOriginalExtension();    //文件拓展名
@@ -29,15 +39,15 @@ class PayController extends Controller
 
             $fileName=explode(".",$originalName)[0];  //文件名
             $realPath = $file->getRealPath();   //临时文件的绝对路径
-
+            return responseToJson(0,"success",$flag);
             $bool = Storage::disk('uploads')->put($originalName,file_get_contents($realPath));
             if ($bool){
-                $data = $this->getArray($this->readExcel($fileName,$ext));
-                return responseToJson(0,"success",[$data,$cpyId]);
+                $data = $this->getPayArray($this->readExcel($fileName,$ext),$cpyId,$flag);
+                if (!$cpyId){
+                    $result = Pay::addExcel($data);
+                }
             }
-
         }
-
 	}
     /**
      * 读取表格
@@ -50,12 +60,17 @@ class PayController extends Controller
         $data=[];
         Excel::selectSheets('Sheet1')->load($filePath, function($reader) use (&$data){
             $data=$reader->toArray();
-
         });
         return $data;
     }
 
-    public function getArray($datas){
+    /**
+     * 组合Pay表数组
+     * @param $datas
+     * @param $cpyId
+     * @return array
+     */
+    public function getPayArray($datas,$cpyId,$flag){
         $payArr=[];
         foreach ($datas as $data){
             $year = substr($data['工资年月'],0,4);
@@ -76,20 +91,37 @@ class PayController extends Controller
                     $jsonArr[$key] = $value;
                 $index++;
             }
-            $pay['工资'] = json_encode($jsonArr);
+            $pay[$cpyId==0?'first_pay':'second_pay'] = json_encode($jsonArr);
+            $pay['type'] = $cpyId;
+            $pay['flag'] = $flag;
             $payArr[] = $pay;
         }
         return $payArr;
+    }
 
+    public function getPayOtherArr($datas) {
+        $payOtherArr = [];
+        foreach ($datas as $data) {
+            $payOther=[];
+            $index = 0;
+            foreach ($data as $key => $value) {
+                $index++;
+                if($index>1&&$index<3)
+                    $payOther=[$key] = $value;
+                if($index>4&&$index<6)
+                    $payOther=[$key] = $value;
+                if($index>11&&$index<14)
+                    $payOther=[$key] = $value;
+            }
+        }
     }
 
     /**
      * 替换成键名数组
      * @param $v
-     * @param $k
      * @param $kname
      */
-    public function foo(&$v, $k, $kname) {
+    public function foo(&$v, $kname) {
         $v = array_combine($kname, array_slice($v, 1, -1));
     }
 }

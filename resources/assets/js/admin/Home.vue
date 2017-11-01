@@ -1,6 +1,6 @@
 <template>
     <div style="display: flex; justify-content: space-evenly;">
-        <div @click="setCpyid(1)">
+        <div @click="setCpyid(0)">
             <el-upload class="upload-demo" drag :show-file-list="false"
                        :action="importFileUrl"
                        :data="upLoadData"
@@ -14,7 +14,7 @@
                 <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过40mb</div>
             </el-upload>
         </div>
-        <div @click="setCpyid(2)">
+        <div @click="setCpyid(1)">
             <el-upload class="upload-demo" drag :show-file-list="false"
                        :action="importFileUrl"
                        :data="upLoadData"
