@@ -10,13 +10,14 @@ use Maatwebsite\Excel\Facades\Excel;
 class PayController extends Controller
 {
     /**
+     * 保存上传文件
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
 	public function saveExcel(Request $request){
 
         $file = $request->file('file');
-
+        $cpyId = $request->cpyId;
         if($file->isValid()){	//判断文件是否上传成功
             $originalName = $file->getClientOriginalName(); //源文件名
             $ext = $file->getClientOriginalExtension();    //文件拓展名
@@ -31,14 +32,15 @@ class PayController extends Controller
 
             $bool = Storage::disk('uploads')->put($originalName,file_get_contents($realPath));
             if ($bool){
-                $data = $this->readExcel($fileName,$ext);
-                $this->getArray($data);
-                return responseToJson(0,"success",$data);
+                $data = $this->getArray($this->readExcel($fileName,$ext));
+                return responseToJson(0,"success",[$data,$cpyId]);
             }
+
         }
 
 	}
     /**
+     * 读取表格
      * @param $fileName       文件名
      * @param $fileType       文件拓展名
      * @return array          excel数组
@@ -48,20 +50,44 @@ class PayController extends Controller
         $data=[];
         Excel::selectSheets('Sheet1')->load($filePath, function($reader) use (&$data){
             $data=$reader->toArray();
+
         });
         return $data;
     }
 
-    public function getArray($data){
-        foreach ($data as $key=>$val){
-
+    public function getArray($datas){
+        $payArr=[];
+        foreach ($datas as $data){
+            $year = substr($data['工资年月'],0,4);
+            $month = substr($data['工资年月'],4,2);
+            $timeStamp = strtotime($year."-".$month."-00 00:00:00");
+            $pay=[
+                'job_num'=>$data['工号'],
+                'pay_year'=> $year,
+                'pay_month'=>$month,
+                'wages_date'=>$timeStamp,
+                'name'=>$data['姓名'],
+                "spell"=>$data['拼音码']
+            ];
+            $jsonArr = [];
+            $index = 0;
+            foreach($data as $key => $value){
+                if ($index>110)
+                    $jsonArr[$key] = $value;
+                $index++;
+            }
+            $pay['工资'] = json_encode($jsonArr);
+            $payArr[] = $pay;
         }
+        return $payArr;
+
     }
 
     /**
+     * 替换成键名数组
      * @param $v
      * @param $k
-     * @param $kname   替换成的键名数组
+     * @param $kname
      */
     public function foo(&$v, $k, $kname) {
         $v = array_combine($kname, array_slice($v, 1, -1));

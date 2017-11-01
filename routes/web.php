@@ -22,6 +22,6 @@ Route::get('captcha/{tmp}','admin\codeController@get_captcha');
 // Route::post('checkLogin','admin\LoginController@get_vaild');
 
 
-Route::get('checkLogin','admin\codeController@get_vaild');
+Route::post('checkLogin','admin\LoginController@get_vaild');
 include('admin.php');
 include('wx.php');

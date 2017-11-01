@@ -1,29 +1,33 @@
 <template>
     <div style="display: flex; justify-content: space-evenly;">
-        <el-upload class="upload-demo" drag
-                   :action="importFileUrl"
-                   :data="upLoadData"
-                   :headers="headers"
-                   :on-error="uploadError"
-                   :on-success="uploadSuccess"
-                   :before-upload="beforeAvatarUpload">
-            <div class="el-upload__text"><h2 style="color:black;">第一批次工资报表上传</h2></div>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过40mb</div>
-        </el-upload>
-        <el-upload class="upload-demo" drag
-                   :action="importFileUrl"
-                   :data="upLoadData"
-                   :headers="headers"
-                   :on-error="uploadError"
-                   :on-success="uploadSuccess"
-                   :before-upload="beforeAvatarUpload">
-            <div class="el-upload__text"><h2 style="color:black;">第二批次工资报表上传</h2></div>
-            <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过40mb</div>
-        </el-upload>
+        <div @click="setCpyid(1)">
+            <el-upload class="upload-demo" drag :show-file-list="false"
+                       :action="importFileUrl"
+                       :data="upLoadData"
+                       :headers="headers"
+                       :on-error="uploadError"
+                       :on-success="uploadSuccess"
+                       :before-upload="beforeAvatarUpload">
+                <div class="el-upload__text"><h2 style="color:black;">第一批次工资报表上传</h2></div>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过40mb</div>
+            </el-upload>
+        </div>
+        <div @click="setCpyid(2)">
+            <el-upload class="upload-demo" drag :show-file-list="false"
+                       :action="importFileUrl"
+                       :data="upLoadData"
+                       :headers="headers"
+                       :on-error="uploadError"
+                       :on-success="uploadSuccess"
+                       :before-upload="beforeAvatarUpload">
+                <div class="el-upload__text"><h2 style="color:black;">第二批次工资报表上传</h2></div>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过40mb</div>
+            </el-upload>
+        </div>
     </div>
 </template>
 <style>
@@ -43,7 +47,7 @@
             return {
                 importFileUrl: '/admin/upload',
                 upLoadData: {
-                    cpyId: '', 
+                    cpyId: '',
                     occurTime: new Date().toLocaleString()
                 },
                 headers:{
@@ -97,6 +101,9 @@
                 }
                 this.loadingInstance = Loading.service({ fullscreen: true });
                 return extension || extension2 && isLt2M
+            },
+            setCpyid(val){
+                this.upLoadData.cpyId = val;
             }
         },
         mounted() {

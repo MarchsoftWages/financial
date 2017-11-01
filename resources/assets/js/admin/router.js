@@ -6,17 +6,21 @@ export default new VueRouter({
     saveScrollPosition: true,
     routes: [
         {
-            name: "index",
-            path: '/index',
-            component: resolve =>void(require(['./Home.vue'], resolve))
+            name: "工资导入",
+            path: '/',
+            component: resolve =>void(require(['./Home.vue'], resolve)),
         },
+        // {
+        //     path: "*",
+        //     redirect: '/index'
+        // },
         {
-            name: "log",
+            name: "日志查看",
             path: '/log',
             component: resolve =>void(require(['./app/Log.vue'], resolve))
         },
         {
-            name: "change",
+            name: "修改密码",
             path: '/change',
             component: resolve =>void(require(['./app/Change.vue'], resolve))
         },
