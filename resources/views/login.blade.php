@@ -21,6 +21,7 @@ body{
 	position: fixed;
 	height: 100%;
 	width: 100%;
+	z-index: 999;
 }
 .in{
 	margin: 0;
@@ -39,7 +40,7 @@ body{
 .form{
 	height: 285px;
 	width: 375px;
-	background-color:#FFE4C4;
+	background-color:#FFF;
 	border-radius: 6px;
 	margin: 0 auto;
 	margin-top: 10%;
@@ -56,7 +57,18 @@ table{
 	background-color: #6699FF;
 	border: none;
 }
-    </style>
+/**************登陆背景效果*************/
+		*{margin: 0;padding: 0;}
+		#container {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+		}
+		#output {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
 </head>
 <body>
 <div class="top">
@@ -83,6 +95,27 @@ table{
 		</form>
 	</div>
 </div>
+<div id="container"><div id="output"></div></div>
+<script src="/js/unit/jquery.js"></script>
+<script src="/js/unit/vector.js"></script>
+<script>
+    $(function(){
+        // 初始化 传入dom id
+        var victor = new Victor("container", "output");
+        var theme = [
+            ["#002c4a", "#005584"],
+            ["#35ac03", "#3f4303"],
+            ["#ac0908", "#cd5726"],
+            ["#18bbff", "#00486b"]
+        ]
+        $(".color li").each(function(index, val) {
+            var color = theme[index];
+            $(this).mouseover(function(){
+                victor(color).set();
+            })
+        });
+    });
+</script>
 <script type="text/javascript">
 	function toVaild(){
 	let name = $('#name').val();
@@ -109,7 +142,7 @@ table{
     }else{
     	return true;
     }
-    
+
 }
 </script>
 </body>
