@@ -20,6 +20,7 @@ body{
 	position: fixed;
 	height: 100%;
 	width: 100%;
+	z-index: 999;
 }
 .in{
 	height: 40px;
@@ -60,6 +61,18 @@ table{
 	background-color: #6699FF;
 	border: none;
 }
+
+/**************登陆背景效果*************/
+		*{margin: 0;padding: 0;}
+		#container {
+			position: absolute;
+			height: 100%;
+			width: 100%;
+		}
+		#output {
+			width: 100%;
+			height: 100%;
+		}
 .error{
 	margin: 0 auto;
 	width: 500px;
@@ -121,6 +134,27 @@ table{
 		</form>
 	</div>
 </div>
+<div id="container"><div id="output"></div></div>
+<script src="/js/unit/jquery.js"></script>
+<script src="/js/unit/vector.js"></script>
+<script>
+    $(function(){
+        // 初始化 传入dom id
+        var victor = new Victor("container", "output");
+        var theme = [
+            ["#002c4a", "#005584"],
+            ["#35ac03", "#3f4303"],
+            ["#ac0908", "#cd5726"],
+            ["#18bbff", "#00486b"]
+        ]
+        $(".color li").each(function(index, val) {
+            var color = theme[index];
+            $(this).mouseover(function(){
+                victor(color).set();
+            })
+        });
+    });
+</script>
 <script type="text/javascript">
 	function toVaild(){
 		let name = $('#name').val();
@@ -152,6 +186,7 @@ table{
 	function closes(){
 		$("#errors").remove();
 	} 
+
 </script>
 <!-- <script src="twitter-bootstrap-v2/docs/assets/js/jquery.js"></script>
 <script src="twitter-bootstrap-v 2/docs/assets/js/bootstrap-alert.js"></script> -->

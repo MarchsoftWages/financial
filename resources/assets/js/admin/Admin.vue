@@ -14,15 +14,12 @@
                             </span>
                         </div>
                         <ul class="menu">
-                            <li class="active">
-                                <router-link to="/index"><i class="ion-ios-folder"></i>工资导入</router-link>
-                            </li>
-                            <li>
-                                <router-link to="log"><i class="el-icon-date"></i>日志查看</router-link>
-                            </li>
-                            <li>
-                                <router-link to="change"><i class="el-icon-setting"></i>修改密码</router-link>
-                            </li>
+                            <template v-for="link in links">
+                                <li @click="selected(link.url)"
+                                    :class="{active: activeUrl == link.url}">
+                                    <router-link :to='link.url'><i class="ion-ios-folder"></i>{{link.name}}</router-link>
+                                </li>
+                            </template>
                         </ul>
                         <div class="logout">
                             <a href="/logout"><i class="ion-log-out"></i>&nbsp;退出</a>
@@ -75,7 +72,7 @@
     }
 
     .logo {
-        background: url('/img/admin/logo-bg.png');
+        background: url('../../img/admin/logo-bg.png');
         height: 100px;
         color: white;
         font-weight: bolder;
@@ -157,19 +154,31 @@
                     name:'username',
                     avarar:''
                 }],
+                links:[
+                    {
+                        url:'/',
+                        name:"工资导入"
+                    },
+                    {
+                        url:'/log',
+                        name:"日志查看"
+                    },
+                    {
+                        url:'/change',
+                        name:"修改密码"
+                    }
+                ],
+                activeUrl:"",
             }
         },
         computed: {},
         methods: {
-            get () {
-                /*var self = this
-                axios.post('info/get', {}).then(function (response) {
-                    self.user = response.data.result
-                })*/
-            },
+            selected: function(url) {
+                this.activeUrl = url;
+            }
         },
         mounted() {
-
+            this.selected(this.$route.path);
         },
     }
 </script>
