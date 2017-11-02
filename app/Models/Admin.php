@@ -13,10 +13,10 @@ class Admin extends Model
         return !$user->isEmpty() ? $user : 0;
     }
 
-    public static function set_password($password){
-    	$user =DB::table('admin')->first();
-    	$user->password=$password;
-    	$bool=$user->save();
-    	return $bool;
+    public static function set_password($name,$password){
+    	$bool=DB::table('admin')
+    	->where('name',$name)
+    	->update(['password'=>$password]);
+    	echo $bool;
     }
 }

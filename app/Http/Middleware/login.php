@@ -11,7 +11,7 @@ class Login
         if($val){
             return $next($request);
         }
-        return redirect('index');
+        return redirect('/');
     }
 
 }

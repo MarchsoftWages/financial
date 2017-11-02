@@ -45,7 +45,7 @@ class LoginController extends Controller
 
         if(($name==$user_name)&&($password==md5(md5($user_password)))){
             if(Session::get('milkcaptcha')==$user_captcha){
-                session(['checkLogin' => 'true']);
+                session(['checkLogin' => $name]);
                 return redirect('/back_index');
             }else{
                  return  $this->returnError('wrro',"验证码输入错误");
@@ -79,8 +79,9 @@ class LoginController extends Controller
               }
               if ($checkpass==md5(md5($oldpass))) {
                  if ($password==$newpass) {
-                  $bool= Admin::set_password(md5(md5($oldpass)));
-                  var_dump($bool);
+                  $name=Session::get('checkLogin');
+                  $bool= Admin::set_password($name,md5(md5($newpass)));
+                  
                  }
               }
              
