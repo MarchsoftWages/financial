@@ -27,7 +27,9 @@ class PayController extends Controller
         $file = $request->file('file');
         $cpyId = $request->cpyId;
         $flag = time();
-
+        $code = 0;
+        $msg = "failed";
+        $paras = "上传失败";
         if($file->isValid()){	//判断文件是否上传成功
             $originalName = $file->getClientOriginalName(); //源文件名
             $ext = $file->getClientOriginalExtension();    //文件拓展名
@@ -39,16 +41,28 @@ class PayController extends Controller
 
             $fileName=explode(".",$originalName)[0];  //文件名
             $realPath = $file->getRealPath();   //临时文件的绝对路径
-            return responseToJson(0,"success",$flag);
+
             $bool = Storage::disk('uploads')->put($originalName,file_get_contents($realPath));
             if ($bool){
-                $data = $this->getPayArray($this->readExcel($fileName,$ext),$cpyId,$flag);
-                if (!$cpyId){
-                    $result = Pay::addExcel($data);
+                $payArr = $this->getPayArray($this->readExcel($fileName,$ext),$cpyId,$flag);
+                $payOtherArr = $this->getPayOtherArr($this->readExcel($fileName,$ext),$flag);
+                $logArr = $this->getLogArr($fileName,$flag,$cpyId);
+                $result = Pay::addExcel($payArr,$payOtherArr,$logArr);
+                if (!$result){
+                    $code = 0;
+                    $msg = "success";
+                    $paras = "上传成功";
                 }
             }
         }
+        return responseToJson($code,$msg,$paras);
 	}
+
+	public function selectLog(){
+        $lists = Pay::getLogs();
+        return $lists?responseToJson(0,"success",$lists):responseToJson(0,"failed","没有查询结果");
+    }
+
     /**
      * 读取表格
      * @param $fileName       文件名
@@ -61,6 +75,7 @@ class PayController extends Controller
         Excel::selectSheets('Sheet1')->load($filePath, function($reader) use (&$data){
             $data=$reader->toArray();
         });
+        array_pop($data);   //删除总计
         return $data;
     }
 
@@ -99,29 +114,72 @@ class PayController extends Controller
         return $payArr;
     }
 
-    public function getPayOtherArr($datas) {
+    /**
+     * 组合PayOther表数组
+     * @param $datas
+     * @param $flag
+     * @return array
+     */
+    public function getPayOtherArr($datas,$flag) {
         $payOtherArr = [];
         foreach ($datas as $data) {
-            $payOther=[];
-            $index = 0;
-            foreach ($data as $key => $value) {
-                $index++;
-                if($index>1&&$index<3)
-                    $payOther=[$key] = $value;
-                if($index>4&&$index<6)
-                    $payOther=[$key] = $value;
-                if($index>11&&$index<14)
-                    $payOther=[$key] = $value;
-            }
+            $payOther=[
+                'job_id'=>$data['工号'],
+                'sex'=>$data['性别'],
+                'department_id'=>$data['部门号'],
+                'department'=>$data['部门'],
+                'team_number'=>$data['班组号'],
+                'team'=>$data['班组'],
+                'team_number2'=>$data['班组2号'],
+                'team2'=>$data['班组2'],
+                'rank'=>$data['职称'],
+                'duties'=>$data['职务'],
+                'school'=>$data['校区'],
+                'duty_free'=>$data['免税'],
+                'dues_free'=>$data['免会费'],
+                'whether_payroll'=>$data['是否打印工资单'],
+                'fund_account'=>$data['公积金帐号'],
+                'id_number'=>$data['身份证号'],
+                'credit_id1'=>$data['卡号1'],
+                'credit_id1_type'=>$data['卡1类型'],
+                'credit_id2'=>$data['卡号2'],
+                'credit_id2_type'=>$data['卡2类型'],
+                'credit_id3'=>$data['卡号3'],
+                'credit_id3_type'=>$data['卡3类型'],
+                'credit_id4'=>$data['卡号4'],
+                'credit_id4_type'=>$data['卡4类型'],
+                'additive_attribute1'=>$data['属性1'],
+                'additive_attribute2'=>$data['属性2'],
+                'additive_attribute3'=>$data['属性3'],
+                'additive_attribute4'=>$data['属性4'],
+                'additive_attribute5'=>$data['属性5'],
+                'additive_attribute6'=>$data['属性6'],
+                'additive_attribute7'=>$data['属性7'],
+                'additive_attribute8'=>$data['属性8'],
+                'flag'=>$flag
+            ];
+            $payOtherArr[] = $payOther;
         }
+        return $payOtherArr;
     }
 
     /**
-     * 替换成键名数组
-     * @param $v
-     * @param $kname
+     * 组合operation_log表数组
+     * @param $fileName
+     * @param $flag
+     * @param $cypId
+     * @return array
      */
-    public function foo(&$v, $kname) {
-        $v = array_combine($kname, array_slice($v, 1, -1));
+    public function getLogArr($fileName,$flag,$cypId){
+        $operationLog = [];
+        $operation = [
+            'operater' => "201615",
+            'file_name' => $fileName,
+            'upload_time' => $flag,
+            'mark' => $flag,
+            'type' => $cypId
+        ];
+        $operationLog [] = $operation;
+        return $operationLog;
     }
 }
