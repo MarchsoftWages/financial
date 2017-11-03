@@ -7,60 +7,60 @@
     <meta name="token" content="{{csrf_token()}}">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
     <title>工资管理登录</title>
-    <style type="text/css">
+	<style type="text/css">
     	@charset "UTF-8";
 
-body{
-  margin: 0px;
-  padding: 0px;
-  font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", Arial, sans-serif;
-}
+	body{
+	  margin: 0px;
+	  padding: 0px;
+	  font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", Arial, sans-serif;
+	}
 
-.top{
-	position: fixed;
-	height: 100%;
-	width: 100%;
-	z-index: 999;
-}
-.in{
-	height: 40px;
-	margin: 5px;
-	width: 100%;
-	padding-left: 5px;
-	border-radius: 5px;
-	border: 1px solid #cccccc;
+	.top{
+		position: fixed;
+		height: 100%;
+		width: 100%;
+		z-index: 999;
+	}
+	.in{
+		height: 40px;
+		margin: 5px;
+		width: 100%;
+		padding-left: 5px;
+		border-radius: 5px;
+		border: 1px solid #cccccc;
 
-}
-.captcha{
-	margin: 0;
-	height: 30px;
-	margin: 5px;
-	width: 55%;
-	border-radius: 5px;
-	border: 1px solid #cccccc;
-}
-.form{
-	height: 330px;
-	width: 500px;
-	background-color:#fff;
-	border-radius: 6px;
-	margin: 0 auto;
-	margin-top: 8%;
-	box-shadow: 1px 1px 3px 3px #cccccc;
-}
-form{
-	padding: 10px 0;
-}
-h2{
-	margin-left: 40%;
-}
-table{
-	margin: 0 auto;
-}
-#submit{
-	background-color: #6699FF;
-	border: none;
-}
+	}
+	.captcha{
+		margin: 0;
+		height: 30px;
+		margin: 5px;
+		width: 55%;
+		border-radius: 5px;
+		border: 1px solid #cccccc;
+	}
+	.form{
+		height: 330px;
+		width: 500px;
+		background-color:#fff;
+		border-radius: 6px;
+		margin: 0 auto;
+		margin-top: 8%;
+		box-shadow: 1px 1px 3px 3px #cccccc;
+	}
+	form{
+		padding: 10px 0;
+	}
+	h2{
+		margin-left: 40%;
+	}
+	table{
+		margin: 0 auto;
+	}
+	#submit{
+		background-color: #6699FF;
+		border: none;
+	}
 
 /**************登陆背景效果*************/
 		*{margin: 0;padding: 0;}
