@@ -15,7 +15,7 @@
                  <el-input type="password" v-model="ruleForm2.checkPass"></el-input>
           </el-form-item>
           <el-form-item>
-                <el-button type="primary" @click="submitForm('ruleForm2')">提交</el-button>
+                <el-button  type="primary" @click="submitForm('ruleForm2')">提交</el-button>
                 <el-button @click="resetForm('ruleForm2')">重置</el-button>
           </el-form-item>
        </el-form>
@@ -111,11 +111,21 @@
               pass:this.ruleForm2.Pass,
               newpass:this.ruleForm2.checkPass
              }
-             axios.post('/modify_password',postData).then( function(response){
-               console.log(response);
+             axios.post('/modify_password',postData).then(res =>{
+                if(res.data.code == 0){
+                    this.$message({
+                      message: res.data.result,
+                      type: 'success'
+                    });
+                }else{
+                 this.$message({
+                      message:  res.data.result,
+                      type: 'error'
+                    });
+                }
              })
              .catch(function(response){
-
+                console.log("error");
              })
             }else{
              console.log('error submit');
@@ -128,7 +138,6 @@
             }
         },
         mounted() {
-
         },
     }
 </script>

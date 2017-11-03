@@ -17,6 +17,6 @@ class Admin extends Model
     	$bool=DB::table('admin')
     	->where('name',$name)
     	->update(['password'=>$password]);
-    	echo $bool;
+    	return $bool;
     }
 }
