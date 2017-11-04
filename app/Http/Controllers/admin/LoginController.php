@@ -24,7 +24,7 @@ class LoginController extends Controller
         if ($request->isMethod('post')) {    
             $this ->validate($request,[
                 'user.name'=>'required|digits:6|regex:/^\d{6}$/',
-                'user.password'=>'required|min:6|regex:/^\w{6,}$/',
+                'user.password'=>'required|min:6|regex:/^[.\_0-9a-z]{6,}$/',
                 'user.Captcha'=>'required|min:5| regex:/^[0-9a-zA_Z]{5}$/',
                 ],[
                 'required' => ':attribute输入错误',
@@ -64,7 +64,7 @@ class LoginController extends Controller
             $oldpass=$request->oldpass;
             $password=$request->pass;
             $newpass=$request->newpass;
-            $regx='/^\w{6,}$/';
+            $regx='/^[.\_0-9a-z]{6,}$/';
             if(preg_match($regx,$newpass)){
             $user= Admin::get_user();
               foreach ($user as $key ) {
@@ -87,6 +87,13 @@ class LoginController extends Controller
           }
 
         }
+    }
+
+    function loginout(){
+         session(['checkLogin' =>0]);
+         return responseToJson(0,'success','/');
+
+
     }
 
 }

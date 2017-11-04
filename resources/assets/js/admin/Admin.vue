@@ -22,7 +22,7 @@
                             </template>
                         </ul>
                         <div class="logout">
-                            <a href="/logout"><i class="ion-log-out"></i>&nbsp;退出</a>
+                            <a @click="loginout()" href="/" ><i class="ion-log-out"></i>&nbsp;退出</a>
                         </div>
                     </div>
                 </td>
@@ -146,7 +146,7 @@
         background-color: #1b6d85;
     }
 </style>
-<script type="text/ecmascript-6">
+<script >
     export default {
         data(){
             return {
@@ -175,6 +175,11 @@
         methods: {
             selected: function(url) {
                 this.activeUrl = url;
+            },
+            logout(){
+
+             axios('/loginout');
+                
             }
         },
         mounted() {

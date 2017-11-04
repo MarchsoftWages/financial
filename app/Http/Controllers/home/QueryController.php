@@ -89,6 +89,6 @@ class QueryController extends Controller
     }
     public function test()
     {
-        dump(strtotime('2017-08'));
+        dump(strtotime('2017-09'));
     }
 }
