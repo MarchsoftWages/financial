@@ -48,6 +48,7 @@
                 importFileUrl: '/admin/upload',
                 upLoadData: {
                     cpyId: '',     //上传标记
+                    updateType: 1  //更新方式
                 },
                 headers:{
                     'X-CSRF-TOKEN':document.head.querySelector('meta[name="X-CSRF-TOKEN"]').content
