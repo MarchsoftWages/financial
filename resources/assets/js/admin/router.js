@@ -20,5 +20,6 @@ export default new VueRouter({
             path: '/change',
             component: resolve =>void(require(['./app/Change.vue'], resolve))
         },
+        
     ]
 })

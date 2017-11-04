@@ -8,6 +8,7 @@ Route::group(['middleware'=>['login']],function(){
     });
     Route::get('/getlogs', 'admin\PayController@selectLog');
     Route::post("/admin/upload", 'admin\PayController@saveExcel');
+    Route::post("/loginout",'admin\LoginController@loginout');
 });
 
 
