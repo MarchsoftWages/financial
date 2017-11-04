@@ -45,7 +45,7 @@ class LoginController extends Controller
 
         if(($name==$user_name)&&($password==md5(md5($user_password)))){
             if(Session::get('milkcaptcha')==$user_captcha){
-                session(['checkLogin' => 'true']);
+                session(['checkLogin' => $name]);
                 return redirect('/back_index');
             }else{
                  return  $this->returnError('wrro',"验证码输入错误");
@@ -60,33 +60,33 @@ class LoginController extends Controller
 
     function modify(Request $request){
           if ($request->isMethod('post')) {
-            // $this->validate($request,[
-            //   'ruleForm2.oldpass'=>'regex:/^\w{6,}$/',
-            //   'ruleForm2.Pass'=>'regex:/^\w{6,}$/',
-            //   ],[
-            //   'ruleForm2.oldpass.regex'=>':attribute输入格式错误',
-            //   'ruleForm2.Pass.regex'=>':attribute输入格式错误',
-            //   ]，[
-            //   'ruleForm2.oldpass'=>'密码',
-            //   'ruleForm2.Pass'=>'密码',
-            //   ]);
+         
             $oldpass=$request->oldpass;
             $password=$request->pass;
             $newpass=$request->newpass;
+            $regx='/^\w{6,}$/';
+            if(preg_match($regx,$newpass)){
             $user= Admin::get_user();
               foreach ($user as $key ) {
                  $checkpass=$key->password;
               }
               if ($checkpass==md5(md5($oldpass))) {
                  if ($password==$newpass) {
-                  $bool= Admin::set_password(md5(md5($oldpass)));
-                  var_dump($bool);
+                  $name=Session::get('checkLogin');
+                  $bool= Admin::set_password($name,md5(md5($newpass)));
+                  return responseToJson(0,'success',"密码修改成功");
+                 }else{
+                  return responseToJson(1,"failed","两次密码输入不一致");
                  }
+              }else{
+                return responseToJson(1,"failed","原密码输入错误");
               }
              
+          }else{
+            return responseToJson(1,"failed","密码格式不对");
           }
 
-
+        }
     }
 
 }

@@ -18,6 +18,8 @@ class Pay extends Model
             ){
                 DB::commit();
                 return 0;    //成功
+            }else{
+                throw new \Exception("失败");
             }
         }catch (\Exception $e){
             DB::rollback();//事务回滚
@@ -27,6 +29,6 @@ class Pay extends Model
     }
 
     public static function getLogs(){
-        return DB::table('operation_log')->select('file_name','operater','upload_time', 'type','state')->paginate(1);
+        return DB::table('operation_log')->select('file_name','operater','upload_time', 'type','state')->paginate(5);
     }
 }
