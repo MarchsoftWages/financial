@@ -24,29 +24,23 @@ class PayController extends Controller
      */
 	public function saveExcel(Request $request){
 
-        $file = $request->file('file');
+        $fileInfo = $this->getFiles($request->file('file'));
         $cpyId = $request->cpyId;
-        $flag = time();
-        $code = 0;
+        $flag = uniqid();
+        $code = 1;
         $msg = "failed";
         $paras = "上传失败";
-        if($file->isValid()){	//判断文件是否上传成功
-            $originalName = $file->getClientOriginalName(); //源文件名
-            $ext = $file->getClientOriginalExtension();    //文件拓展名
-            $type = $file->getClientMimeType(); //文件类型
-            $isExcel=starts_with($type, 'application/');
 
-            if (!$isExcel)
+        if($fileInfo['isValid']){	//判断文件是否上传成功
+
+            if (!$fileInfo['isExcel'])
                 return responseToJson(1,"failed","文件类型错误");
-
-            $fileName=explode(".",$originalName)[0];  //文件名
-            $realPath = $file->getRealPath();   //临时文件的绝对路径
-
-            $bool = Storage::disk('uploads')->put($originalName,file_get_contents($realPath));
+            $bool = Storage::disk('uploads')->put($fileInfo['originalName'],file_get_contents($fileInfo['fileRealpath']));
             if ($bool){
-                $payArr = $this->getPayArray($this->readExcel($fileName,$ext),$cpyId,$flag);
-                $payOtherArr = $this->getPayOtherArr($this->readExcel($fileName,$ext),$flag);
-                $logArr = $this->getLogArr($fileName,$flag,$cpyId);
+                $excel = $this->readExcel($fileInfo['fileName'],$fileInfo['filExtension']);
+                $payArr = $this->getPayArray($excel,$cpyId,$flag);
+                $payOtherArr = $this->getPayOtherArr($excel,$flag);
+                $logArr = $this->getLogArr($fileInfo['fileName'],$flag,$cpyId);
                 $result = Pay::addExcel($payArr,$payOtherArr,$logArr);
                 if (!$result){
                     $code = 0;
@@ -61,6 +55,10 @@ class PayController extends Controller
 	public function selectLog(){
         $lists = Pay::getLogs();
         return $lists?responseToJson(0,"success",$lists):responseToJson(0,"failed","没有查询结果");
+    }
+
+    public function updateExcel(){
+
     }
 
     /**
@@ -125,7 +123,7 @@ class PayController extends Controller
         foreach ($datas as $data) {
             $payOther=[
                 'job_id'=>$data['工号'],
-                'sex'=>$data['性别'],
+                'sex'=>$data['性别']=='男'?0:1,
                 'department_id'=>$data['部门号'],
                 'department'=>$data['部门'],
                 'team_number'=>$data['班组号'],
@@ -175,11 +173,33 @@ class PayController extends Controller
         $operation = [
             'operater' => "201615",
             'file_name' => $fileName,
-            'upload_time' => $flag,
+            'upload_time' => time(),
             'mark' => $flag,
             'type' => $cypId
         ];
         $operationLog [] = $operation;
         return $operationLog;
+    }
+
+    /**
+     * 文件信息
+     * @param $file
+     * @return array
+     */
+    public function getFiles($file){
+        $isValid = $file->isValid();
+        $originalName= $file->getClientOriginalName(); //源文件名
+        $ext = $file->getClientOriginalExtension();    //文件拓展名
+        $isExcel=starts_with($file->getClientMimeType(), 'application/');  //文件类型正确错误
+        $fileName=explode(".",$originalName)[0];  //文件名
+        $realPath = $file->getRealPath();   //临时文件的绝对路径
+        return [
+            'isValid'=>$isValid,
+            'originalName'=>$originalName,
+            'fileName'=>$fileName,
+            'fileRealpath'=>$realPath,
+            'isExcel'=>$isExcel,
+            'filExtension'=>$ext
+        ];
     }
 }
