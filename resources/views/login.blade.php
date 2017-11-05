@@ -23,8 +23,8 @@
 		z-index: 999;
 	}
 	.in{
-		height: 40px;
-		margin: 5px;
+		height: 35px;
+		margin: 7px;
 		width: 100%;
 		padding-left: 5px;
 		border-radius: 5px;
@@ -40,13 +40,13 @@
 		border: 1px solid #cccccc;
 	}
 	.form{
-		height: 330px;
-		width: 500px;
-		background-color:#fff;
+		height: 290px;
+		width: 430px;
+		background-color: #fff;
 		border-radius: 6px;
 		margin: 0 auto;
 		margin-top: 8%;
-		box-shadow: 1px 1px 3px 3px #cccccc;
+		box-shadow: 1px 1px 1px 1px #cccccc;
 	}
 	form{
 		padding: 10px 0;
@@ -58,6 +58,7 @@
 		margin: 0 auto;
 	}
 	#submit{
+		cursor: pointer;
 		background-color: #6699FF;
 		border: none;
 	}
