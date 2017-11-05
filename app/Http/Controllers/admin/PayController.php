@@ -82,9 +82,19 @@ class PayController extends Controller
      * 显示日志列表
      * @return \Illuminate\Http\JsonResponse
      */
-	public function selectLog(){
-        $lists = Pay::getLogs();
+	public function selectLogs(Request $request){
+        $lists = Pay::getLogs($request->type);
         return $lists?responseToJson(0,"success",$lists):responseToJson(0,"failed","没有查询结果");
+    }
+
+    public function selectLog(Request $request){
+        if($request->value!=""){
+            $dateArr = explode("-",$request->value);
+            $request->value=[mktime(0,0,0,intval($dateArr[1]),0,intval($dateArr[0])),mktime(0,0,0,intval($dateArr[1])+1,0,intval($dateArr[0]))];
+        }else
+            $request->value;
+        $list = Pay::getLog($request->type,$request->input,$request->value);
+        return $list?responseToJson(0,"success",$list):responseToJson(0,"failed","没有查询结果");
     }
 
     /**

@@ -6,9 +6,10 @@ Route::group(['middleware'=>['login']],function(){
     Route::get('/back_index', function () {
         return view('index');
     });
-    Route::get('/getlogs', 'admin\PayController@selectLog');
+    Route::get('/getlogs', 'admin\PayController@selectLogs');
+    Route::get('/getlog', 'admin\PayController@selectLog');
     Route::post("/admin/upload", 'admin\PayController@uploadExcel');
-    Route::get("/admin/delete", 'admin\PayController@deleteExcel');
+    Route::post("/admin/delete", 'admin\PayController@deleteExcel');
     Route::post("/loginout",'admin\LoginController@loginout');
 });
 

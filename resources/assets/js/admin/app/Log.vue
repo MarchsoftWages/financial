@@ -27,14 +27,15 @@
                 <el-date-picker
                         v-model="value"
                         type="month"
+                        @change="dateChange"
                         :picker-options="pickerBeginDateBefore"
                         placeholder="选择月">
                 </el-date-picker>
             </div>
-            <el-button type="primary" icon="search">搜索</el-button>
+            <el-button type="primary" icon="search" @click="searchLog">搜索</el-button>
         </el-breadcrumb>
         <el-table
-            :data="pageData.data"
+            :data="changeSearch==0?pageData.data:search"
             border
             style="width: 100%"
             :default-sort = "{prop: 'upload_time', order: 'descending'}">
@@ -85,7 +86,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div align="center">
+        <div align="center" v-show="changeSearch==0">
             <el-pagination
                     @current-change="handleCurrentChange"
                     :current-page.sync="pageData.current_page"
@@ -143,9 +144,21 @@
                     ]
                 },
                 loadingInstance:'',   //loading
+                changeSearch:0,
                 radio:0,
+                oldRadio:0,
                 input:'',
                 value:'',
+                search:[
+                    {
+                        file_name:'',
+                        operater:'',
+                        upload_time:'',
+                        mark:'',
+                        type:'',
+                        state:''
+                    }
+                ],
                 pickerBeginDateBefore:{
                     disabledDate: (time) => {
                         return time.getTime() > Date.now() - 8.64e7;
@@ -166,7 +179,7 @@
              * 请求下一页的数据
              */
             handleCurrentChange(val) {
-                this.getData('/getlogs?page='+val);
+                this.getData('/getlogs?page='+val+'&type='+this.radio,0);
             },
             /**
              * @param row
@@ -190,9 +203,9 @@
                     type: 'info'
                 }).then(() => {
                     this_.loadingInstance = Loading.service({ fullscreen: true });
-                    axios.get('/admin/delete?flag='+row.mark).then(function (response) {
+                    axios.post('/admin/delete',{flag:row.mark}).then(function (response) {
                         this_.loadingInstance.close();
-                        this_.getData('/getlogs?page='+this_.pageData.current_page);
+                        this_.getData('/getlogs?page='+this_.pageData.current_page+'&type='+this.radio,0);
                         if(response.data.code==3)
                             this_.$message.error(response.data.result);
                         else
@@ -206,14 +219,21 @@
             /**
              * 数据请求方法
              * @param url
+             * @param type  0 分页查询 ;1 条件查询
              */
-            getData(url){
+            getData(url,type){
                 var this_ = this;
+                this.changeSearch = type;
                 axios.get(url)
                 .then(function (response) {
                     this_.loadingInstance.close();
+                    this_.input="";
+                    this_.value="";
                     if (response.data.code==0){
-                        this_.pageData=response.data.result;
+                        if(type==0)
+                            this_.pageData=response.data.result;
+                        if(type==1)
+                            this_.search=response.data.result;
                     }else
                         this_.$message.error(response.data.result);
                 }).catch(function (response) {
@@ -230,7 +250,7 @@
             upSuccess (response, file, fileList) {
                 this.loadingInstance.close();
                 this.updateVisible = false;
-                this.getData('/getlogs?page='+this.pageData.current_page);
+                this.getData('/getlogs?page='+this.pageData.current_page+'&type='+this.radio,0);
                 if(response.code==1){
                     this.$message.error(response.result);
                     return;
@@ -269,12 +289,26 @@
                 return extension || extension2 && isLt2M
             },
             getRadio(){
-                console.log(this.radio);
+                if(this.radio!=this.oldRadio){
+                    this.loadingInstance = Loading.service({ fullscreen: true });
+                    this.getData('/getlogs?page=1&type='+this.radio,0);
+                }
+                this.oldRadio=this.radio;
+
+            },
+            dateChange(val){
+                this.value = val;
+            },
+            searchLog(){
+                if(this.input!=""||this.value!=""){
+                    this.loadingInstance = Loading.service({ fullscreen: true });
+                    this.getData('/getlog?type='+this.radio+'&input='+this.input+'&value='+this.value,1);
+                }
             },
         },
         mounted() {
             this.loadingInstance = Loading.service({ fullscreen: true });
-            this.getData('/getlogs?page=1');
+            this.getData('/getlogs?page=1&type='+this.radio,0);
         },
     }
 </script>

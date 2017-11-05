@@ -78,10 +78,44 @@ class Pay extends Model
      * 获取日志
      * @return mixed
      */
-    public static function getLogs(){
-        return DB::table('operation_log')->orderBy('upload_time','desc')
-            ->select('file_name','operater','upload_time','mark','type','state')
-            ->paginate(5);
+    public static function getLogs($type){
+        $datas = DB::table('operation_log')->orderBy('upload_time','desc')
+            ->select('file_name','operater','upload_time','mark','type','state');
+        if ($type==1)
+            return $datas->where('type',0)->paginate(5);
+        if ($type==2)
+            return $datas->where('type',1)->paginate(5);
+        return $datas->paginate(5);
+    }
+    public static function getLog($type,$input,$value){
+        $data = DB::table('operation_log')->orderBy('upload_time','desc')
+            ->select('file_name','operater','upload_time','mark','type','state');
+        if ($input==""&&$value=="")
+            return false;
+        if ($input!=""&&$value==""){
+            if ($type==0)
+                return $data->where('file_name','like','%'.$input.'%')->get();
+            else{
+                $type=$type-1;
+                return $data->where('type',$type)->where('file_name','like','%'.$input.'%')->get();
+            }
+        }
+        if ($input==""&&$value!=""){
+            if ($type==0)
+                return $data->whereBetween('upload_time',$value)->get();
+            else{
+                $type=$type-1;
+                return $data->where('type',$type)->whereBetween('upload_time',$value)->get();
+            }
+        }
+        if ($input!=""&&$value!=""){
+            if ($type==0)
+                return $data->where('file_name','like','%'.$input.'%')->whereBetween('upload_time',$value)->get();
+            else{
+                $type=$type-1;
+                return $data->where('type',$type)->where('file_name','like','%'.$input.'%')->whereBetween('upload_time',$value)->get();
+            }
+        }
     }
 
     /**
