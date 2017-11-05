@@ -7,6 +7,7 @@
             <group>
                 <datetime v-model="start" format="YYYY-MM" title="开始时间"></datetime>
                 <datetime v-model="end" format="YYYY-MM" title="开始时间"></datetime>
+                    <selector ref="defaultValueRef" title="批次" :options="select" v-model="value"></selector>
             </group>
             <div class="query-button">
                 <x-button type="primary" :disabled="dis" :show-loading="submit_loading" @click.native="query">查询</x-button>
@@ -40,13 +41,14 @@
     }
 </style>
 <script type="text/ecmascript-6">
-    import { XHeader, XButton,Datetime,Group  } from 'vux'
+    import { XHeader, XButton,Datetime,Group,Selector  } from 'vux'
     export default {
         components:{
             XHeader,
             XButton,
             Datetime,
-            Group
+            Group,
+            Selector
         },
         data(){
             return {
@@ -54,6 +56,8 @@
                 end: '',
                 submit_loading: false,
                 dis: true,
+                select: [{key:0,value:'第一批'},{key: 1,value: '第二批'}],
+                value: 0,
             }
         },
         watch: {
@@ -75,7 +79,7 @@
         computed: {},
         methods: {
             query() {
-                this.$router.push({path:'/list/'+this.$route.params.job_num+'/'+this.$route.params.mobile+'/'+this.start+'/'+this.end})
+                this.$router.push({path:'/list/'+this.$route.params.job_num+'/'+this.$route.params.mobile+'/'+this.start+'/'+this.end+'/'+this.value})
             },
         },
         mounted() {

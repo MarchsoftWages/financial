@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="head">
-            <x-header> <span v-if="info.pay_year">{{ info.pay_year + '-' + info.pay_month }} 工资详情</span></x-header>
+            <x-header> <span v-if="info.pay_year">{{ info.pay_year + '-' + info.pay_month }} {{ this.$route.params.type == 0 ? '第一批' : '第二批' }} 工资</span></x-header>
         </div>
         <div class="wages">
             <group v-if="!more">
@@ -12,7 +12,7 @@
                 <x-input title='奖励绩效:' :value="wages['奖励绩效']" readonly text-align="right"></x-input>
                 <x-input title='预增发:' :value="wages['预增发']" readonly text-align="right"></x-input>
                 <x-input title='文明奖:' :value="wages['文明奖']" readonly text-align="right"></x-input>
-                <x-input title='预发(调):' :value="wages['预发（调)']" readonly text-align="right"></x-input>
+                <x-input title='预发(调):' :value="wages['预发调']" readonly text-align="right"></x-input>
                 <x-input title='应发合计:' :value="wages['应发合计']" readonly text-align="right"></x-input>
                 <x-input title='公积金:' :value="wages['公积金']" readonly text-align="right"></x-input>
                 <x-input title='失业保险:' :value="wages['失业保险']" readonly text-align="right"></x-input>
@@ -65,7 +65,11 @@
                 this.$vux.loading.show({
                     text: '加载中'
                 })
-                axios.post('/detail/get',{job_num:this.$route.params.job_num,month:this.$route.params.month}).then( res => {
+                axios.post('/detail/get',{
+                    job_num:this.$route.params.job_num,
+                    month:this.$route.params.month,
+                    type: this.$route.params.type,
+                }).then( res => {
                     if(res.data.code == 0){
                         res.data.result.first_pay = JSON.parse(res.data.result.first_pay)
                         this.wages = res.data.result.first_pay
