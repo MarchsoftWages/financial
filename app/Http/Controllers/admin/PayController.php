@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use App\Models\Pay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -22,17 +23,15 @@ class PayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-	public function saveExcel(Request $request){
+	public function uploadExcel(Request $request){
 
         $fileInfo = $this->getFiles($request->file('file'));
         $cpyId = $request->cpyId;
-        $flag = uniqid();
+        $flag=($request->updateType==1?uniqid():$request->flag);
         $code = 1;
         $msg = "failed";
         $paras = "上传失败";
-
         if($fileInfo['isValid']){	//判断文件是否上传成功
-
             if (!$fileInfo['isExcel'])
                 return responseToJson(1,"failed","文件类型错误");
             $bool = Storage::disk('uploads')->put($fileInfo['originalName'],file_get_contents($fileInfo['fileRealpath']));
@@ -41,24 +40,61 @@ class PayController extends Controller
                 $payArr = $this->getPayArray($excel,$cpyId,$flag);
                 $payOtherArr = $this->getPayOtherArr($excel,$flag);
                 $logArr = $this->getLogArr($fileInfo['fileName'],$flag,$cpyId);
-                $result = Pay::addExcel($payArr,$payOtherArr,$logArr);
-                if (!$result){
-                    $code = 0;
-                    $msg = "success";
-                    $paras = "上传成功";
+                if($request->updateType==1){
+                    $result = Pay::addExcel($payArr,$payOtherArr,$logArr);
+                    if (!$result){
+                        $code = 0;
+                        $msg = "success";
+                        $paras = "上传成功";
+                    }
+                }else{
+                    $result = Pay::updateExcel($payArr,$payOtherArr,$logArr);
+                    if (!$result){
+                        $code = 0;
+                        $msg = "success";
+                        $paras = "重新录入成功";
+                    }else{
+                        $code = 2;
+                        $paras = "录入数据相同";
+                    }
                 }
+
             }
         }
         return responseToJson($code,$msg,$paras);
 	}
 
-	public function selectLog(){
-        $lists = Pay::getLogs();
+	public function deleteExcel(Request $request){
+        $result = Pay::deleteExcel($request->flag);
+        if (!$result){
+            $code = 0;
+            $msg = "success";
+            $paras = "删除成功";
+        }else{
+            $code = 3;
+            $msg = "failed";
+            $paras = "删除失败";
+        }
+        return responseToJson($code,$msg,$paras);
+    }
+
+    /**
+     * 显示日志列表
+     * @return \Illuminate\Http\JsonResponse
+     */
+	public function selectLogs(Request $request){
+        $lists = Pay::getLogs($request->type);
         return $lists?responseToJson(0,"success",$lists):responseToJson(0,"failed","没有查询结果");
     }
 
-    public function updateExcel(){
-
+    public function selectLog(Request $request){
+        if($request->value!=""){
+            $dateArr = explode("-",$request->value);
+            $request->value=[mktime(0,0,0,intval($dateArr[1]),0,intval($dateArr[0])),mktime(0,0,0,intval($dateArr[1])+1,0,intval($dateArr[0]))];
+        }else
+            $request->value;
+        $list = Pay::getLog($request->type,$request->input,$request->value);
+        return $list?responseToJson(0,"success",$list):responseToJson(0,"failed","没有查询结果");
     }
 
     /**
@@ -171,7 +207,7 @@ class PayController extends Controller
     public function getLogArr($fileName,$flag,$cypId){
         $operationLog = [];
         $operation = [
-            'operater' => "201615",
+            'operater' => Session::get('checkLogin'),
             'file_name' => $fileName,
             'upload_time' => time(),
             'mark' => $flag,

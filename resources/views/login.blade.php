@@ -10,6 +10,58 @@
 	<style type="text/css">
     	@charset "UTF-8";
 
+body{
+  font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", Arial, sans-serif;
+}
+
+.top{
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	z-index: 999;
+}
+.in{
+	height: 30px;
+	margin: 5px;
+	width: 95%;
+	padding-left: 5px;
+	border-radius: 5px;
+	border: 1px solid #cccccc;
+
+}
+.login{
+	height: 60px;
+}
+.captcha{
+	margin: 0;
+	height: 30px;
+	margin: 5px;
+	width: 55%;
+	border-radius: 5px;
+	border: 1px solid #cccccc;
+}
+.form{
+	height: auto;
+	width: 400px;
+	background-color:#fff;
+	border-radius: 6px;
+	margin: 0 auto;
+	margin-top: 10%;
+	box-shadow: 1px 1px 3px 3px #cccccc;
+}
+form{
+	padding: 10px 0 30px 0;
+}
+h2{
+	margin-left: 35%;
+}
+table{
+	margin: 0 auto;
+}
+#submit{
+	background-color: #6699FF;
+	border: none;
+}
 	body{
 	  margin: 0px;
 	  padding: 0px;
@@ -76,11 +128,12 @@
 		}
 .error{
 	margin: 0 auto;
-	width: 500px;
+	width: 400px;
 	margin-top: 5%;
 	background-color:rgb(242,222,222);
 	border-radius: 6px;
 	color: rgb(185,74,138);
+	z-index: 99;
 }
 .alert{
 	padding: 10px;
@@ -91,7 +144,13 @@
 	font-size: 20px;
 	cursor: pointer;
 }
-
+.wrong{
+	font-size: 12px;
+	margin-left: 10px;
+	color: red;
+	width: auto;
+	 display: inherit;
+}
 
  </style>
 </head>
@@ -122,12 +181,22 @@
 		 <table>                                                              
 		 	<tr>
 		 		<td ><input type="text" name="user[name]" id="name" mix="6" placeholder ="用户名" class="in" value="{{old('user')['name']}}"></td>
+
+		 	</tr>
+		 	<tr>
+		 		<td ><p id="user" class="wrong"></p></td>
 		 	</tr>
 		 	<tr>
 		 		<td ><input type="password" name="user[password]" id="password" placeholder="密码" class="in" value="{{old('user')['password']}}"></td>
 		 	</tr>
 		 	<tr>
+		 		<td ><p id="pass" class="wrong"></p></td>
+		 	</tr>
+		 	<tr>
 		 		<td><input type="text" name="user[Captcha]" class="captcha" id="Captcha"><img        src="{{ url('captcha/1') }}" onclick="this.src='{{url('captcha/1')}}?'+Math.random();"  style="margin-bottom: -12px;"></td>
+		 	</tr>
+		 	<tr>
+		 		<td ><p id="cap" class="wrong"></p></td>
 		 	</tr>
 		 	<tr><td><input type="submit" name="submit" value="登录" class="in" id="submit"></td></tr>
 		 	</tr>
@@ -162,22 +231,26 @@
 		let password = $('#password').val();
 		let Captcha =$('#Captcha').val();
 	 	let reg = /^\d{6}$/;
-		let pass=/^\w{6,}$/;
+		let pass=/^[.\_0-9a-z]{6,}$/;
+
 	    let capt=/^[0-9a-zA_Z]{5}$/;
 
 		if(!reg.test(name)){
 			$("#name").val("");
-			$("#name").attr('placeholder','用户名错误');
+			$("#user").html('用户名错误');
 			return false;
 	    }
 	    else if(!pass.test(password)){
+	    	$("#user").html('');
 			$("#password").val("");
-			$("#password").attr('placeholder','密码输入错误');
+			$("#pass").html('密码输入错误');
 			return false;
 	    }
 		else if(!capt.test(Captcha)) {
+			$("#user").html('');
+			$("#pass").html('');
 			$("#Captcha").val("");
-			$("#Captcha").attr('placeholder','验证码输入错误');
+			$("#cap").html('验证码输入错误');
 			return false;
 		}else{
 			return true;
@@ -189,7 +262,6 @@
 	} 
 
 </script>
-<!-- <script src="twitter-bootstrap-v2/docs/assets/js/jquery.js"></script>
-<script src="twitter-bootstrap-v 2/docs/assets/js/bootstrap-alert.js"></script> -->
+
 </body>
 </html>

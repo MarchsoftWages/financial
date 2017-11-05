@@ -1,4 +1,5 @@
 <template>
+ <div class="border">
     <div class="main">
         <div class="title">
             <h2>修改密码</h2>
@@ -20,10 +21,16 @@
           </el-form-item>
        </el-form>
    </div>
+   </div>
 </template>
 <style scoped>
+   .border{
+    /*border: 1px solid #000;*/
+    background-color: #fff;
+   }
   .main{
     width: 600px;
+    padding: 20px;
   }
   .title{
     margin-bottom: 40px;
@@ -104,6 +111,13 @@
         computed: {},
         methods: {
            submitForm(formName) {
+          /*  var self = this
+           axios.post('/modify_password',{}).then( res => {
+                this.$message({
+                      message: '恭喜你，这是一条成功消息',
+                      type: 'success'
+                    });
+           })*/
             this.$refs[formName].validate((valid)=>{
             if(valid){
              const postData={
@@ -111,21 +125,24 @@
               pass:this.ruleForm2.Pass,
               newpass:this.ruleForm2.checkPass
              }
-             axios.post('/modify_password',postData).then(res =>{
+             axios.post('/modify_password',postData).then( res =>{
                 if(res.data.code == 0){
                     this.$message({
                       message: res.data.result,
                       type: 'success'
                     });
                 }else{
-                 this.$message({
-                      message:  res.data.result,
+                this.$message({
+                      message: res.data.result,
                       type: 'error'
                     });
                 }
              })
              .catch(function(response){
-                console.log("error");
+                this.$message({
+                      message: '提交失败',
+                      type: 'error'
+                    });
              })
             }else{
              console.log('error submit');

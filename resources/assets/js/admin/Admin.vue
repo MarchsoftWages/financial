@@ -22,7 +22,7 @@
                             </template>
                         </ul>
                         <div class="logout">
-                            <a href="/logout"><i class="ion-log-out"></i>&nbsp;退出</a>
+                            <a @click="loginout()"><i class="ion-log-out"></i>&nbsp;退出</a>
                         </div>
                     </div>
                 </td>
@@ -146,7 +146,7 @@
         background-color: #1b6d85;
     }
 </style>
-<script type="text/ecmascript-6">
+<script >
     export default {
         data(){
             return {
@@ -175,6 +175,27 @@
         methods: {
             selected: function(url) {
                 this.activeUrl = url;
+            },
+            loginout(){
+        this.$confirm('是否确认退出系统', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+         }).then(() => {
+             axios('/loginout');
+              this.$message({
+                type: 'success',
+                message: '退出成功!'
+              });
+              window.location="/";
+        }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '取消退出'
+              });          
+        });
+               
+                
             }
         },
         mounted() {
