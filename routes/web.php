@@ -11,16 +11,13 @@
 |
 */
 
-Route::get('/', function () {
+Route::get('/login', function () {
     return view('login');
 });
 Route::get('/wx', function () {
     return view('wx_index');
 });
 Route::get('captcha/{tmp}','admin\codeController@get_captcha');
-
-// Route::post('checkLogin','admin\LoginController@get_vaild');
-
 
 Route::post('checkLogin','admin\LoginController@get_vaild');
 include('admin.php');

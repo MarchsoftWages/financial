@@ -3,7 +3,7 @@
 Route::post('login','admin\LoginController@get_vaild');
 Route::group(['middleware'=>['login']],function(){
     Route::post("modify_password", 'admin\LoginController@modify');
-    Route::get('/back_index', function () {
+    Route::get('/', function () {
         return view('index');
     });
     Route::get('/getlogs', 'admin\PayController@selectLogs');

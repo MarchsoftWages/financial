@@ -227,8 +227,6 @@
                 axios.get(url)
                 .then(function (response) {
                     this_.loadingInstance.close();
-                    this_.input="";
-                    this_.value="";
                     if (response.data.code==0){
                         if(type==0)
                             this_.pageData=response.data.result;
@@ -300,9 +298,11 @@
                 this.value = val;
             },
             searchLog(){
+                this.loadingInstance = Loading.service({ fullscreen: true });
                 if(this.input!=""||this.value!=""){
-                    this.loadingInstance = Loading.service({ fullscreen: true });
                     this.getData('/getlog?type='+this.radio+'&input='+this.input+'&value='+this.value,1);
+                }else {
+                    this.getData('/getlogs?page=1&type='+this.radio,0);
                 }
             },
         },
