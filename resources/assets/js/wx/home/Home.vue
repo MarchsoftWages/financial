@@ -10,6 +10,9 @@
                     <button-tab-item @click.native="getYear"> 全年 </button-tab-item>
                 </button-tab>
             </div>
+            <group>
+                <x-switch :title="stringValue == 0 ? '第一批' : '第二批'" :value-map="['0', '1']" v-model="stringValue" @on-change="select"></x-switch>
+            </group>
         </div>
         <div class="wages">
             <group v-if="!more">
@@ -53,11 +56,11 @@
         text-decoration: none;
     }
     .wages{
-        margin-top: 100px;
+        margin-top: 170px;
     }
 </style>
 <script type="text/ecmascript-6">
-    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore } from 'vux'
+    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore,XSwitch } from 'vux'
     export default {
         components:{
             XHeader,
@@ -67,29 +70,39 @@
             Cell,
             Group,
             XInput,
-            LoadMore
+            LoadMore,
+            XSwitch,
         },
         data(){
             return {
                 wages:[],
-                more: false
+                more: false,
+                stringValue: '0'
             }
         },
         computed: {},
         methods: {
-            getCurrent() {      //当月和上月的工资
+            getCurrent(value) {      //当月和上月的工资
                 this.$vux.loading.show({
                     text: '加载中'
                 })
-                axios.post('/current/get',{job_num:this.$route.params.job_num,flag:1}).then( res => {
+                axios.post('/current/get',{
+                    job_num:this.$route.params.job_num,
+                    flag:1,
+                    type: value
+                }).then( res => {
                     if(res.data.code == 0){
                         res.data.result.first_pay = JSON.parse(res.data.result.first_pay)
                         this.wages = res.data.result.first_pay
+                        this.more = false
                     }else{
                         this.more = true
                     }
                     this.$vux.loading.hide()
                 })
+            },
+            select(value) {
+                this.getCurrent(value)
             },
             getPre() {
                 this.$router.push({path:'/pre/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
@@ -102,7 +115,7 @@
             },
         },
         mounted() {
-            this.getCurrent()
+            this.getCurrent(0)
         },
     }
 </script>

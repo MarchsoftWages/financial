@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="head">
-            <x-header>查询结果</x-header>
+            <x-header> {{ this.$route.params.type == 0 ? '第一批' : '第二批' }} 查询结果</x-header>
         </div>
         <div class="wages">
             <group v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_month)">
@@ -83,6 +83,7 @@
                     job_num:this.$route.params.job_num,
                     start:this.$route.params.start,
                     end:this.$route.params.end,
+                    type: this.$route.params.type
                 }).then( res => {
                     if(res.data.code == 0){
                         this.list = res.data.result
@@ -96,7 +97,7 @@
                 })
             },
             detail(job_num,month) {
-                this.$router.push({path:'/detail/'+job_num+'/'+month})
+                this.$router.push({path:'/detail/'+job_num+'/'+month+'/'+this.$route.params.type})
             },
         },
         mounted() {
