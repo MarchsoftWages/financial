@@ -10,7 +10,6 @@
 	<style type="text/css">
     	@charset "UTF-8";
 
-<<<<<<< HEAD
 body{
   font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", Arial, sans-serif;
 }
@@ -63,7 +62,6 @@ table{
 	background-color: #6699FF;
 	border: none;
 }
-=======
 	body{
 	  margin: 0px;
 	  padding: 0px;
@@ -77,9 +75,9 @@ table{
 		z-index: 999;
 	}
 	.in{
-		height: 40px;
+		height: 35px;
 		margin: 5px;
-		width: 100%;
+		width: 95%;
 		padding-left: 5px;
 		border-radius: 5px;
 		border: 1px solid #cccccc;
@@ -95,7 +93,6 @@ table{
 	}
 	.form{
 		height: 330px;
-		width: 500px;
 		background-color:#fff;
 		border-radius: 6px;
 		margin: 0 auto;
@@ -115,7 +112,6 @@ table{
 		background-color: #6699FF;
 		border: none;
 	}
->>>>>>> 6d07cfd8f5c87add9e6f1180158d2c91e5156d59
 
 /**************登陆背景效果*************/
 		*{margin: 0;padding: 0;}
