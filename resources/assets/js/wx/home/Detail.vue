@@ -12,7 +12,7 @@
                 <x-input title='奖励绩效:' :value="wages['奖励绩效']" readonly text-align="right"></x-input>
                 <x-input title='预增发:' :value="wages['预增发']" readonly text-align="right"></x-input>
                 <x-input title='文明奖:' :value="wages['文明奖']" readonly text-align="right"></x-input>
-                <x-input title='预发(调):' :value="wages['预发（调)']" readonly text-align="right"></x-input>
+                <x-input title='预发(调):' :value="wages['预发(调)']" readonly text-align="right"></x-input>
                 <x-input title='应发合计:' :value="wages['应发合计']" readonly text-align="right"></x-input>
                 <x-input title='公积金:' :value="wages['公积金']" readonly text-align="right"></x-input>
                 <x-input title='失业保险:' :value="wages['失业保险']" readonly text-align="right"></x-input>

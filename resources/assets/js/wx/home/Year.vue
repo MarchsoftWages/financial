@@ -17,10 +17,10 @@
                 <div class="list">
                     <span>工资实发额：</span>
                     <span class="gt-icon"><i>&gt;</i></span>
-                    <span class="total"> {{ item.first_pay['工资实发额'] }} </span>
+                    <span class="total" > {{ item }} </span>
                 </div>
             </group>
-            <div style="margin-top: 80px;" v-if="more">
+            <div style="margin-top: 120px;" v-if="more">
                 <load-more :show-loading="false" tip="暂无数据" background-color="#fbf9fe"></load-more>
             </div>
         </div>
@@ -90,9 +90,11 @@
                 })
                 axios.post('/year/get',{job_num:this.$route.params.job_num}).then( res => {
                     if(res.data.code == 0){
-                        this.list = res.data.result
-                        for (let i in this.list){
-                            this.list[i].first_pay = JSON.parse(this.list[i].first_pay)
+                        let data = res.data.result
+                        for (let i in data){
+                            data[i].first_pay = JSON.parse(data[i].first_pay)
+                            //this.list[i] = data[i].first_pay
+                            console.log(data[i].first_pay['工资实发额'])
                         }
                     }else{
                         this.more = true
