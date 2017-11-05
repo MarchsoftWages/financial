@@ -92,8 +92,6 @@ class LoginController extends Controller
     function loginout(){
          session(['checkLogin' =>0]);
          return responseToJson(0,'success','/');
-
-
     }
 
 }
