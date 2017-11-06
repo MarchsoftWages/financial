@@ -28,6 +28,11 @@
         </div>
     </div>
 </template>
+<style>
+    .vux-button-group a{
+        text-decoration: none;
+    }
+</style>
 <style scoped>
     .head{
         position: fixed;
