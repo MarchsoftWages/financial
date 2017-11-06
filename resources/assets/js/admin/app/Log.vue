@@ -97,7 +97,7 @@
         </div>
     </div>
 </template>
-<style>
+<style  scoped>
     .el-upload-dragger {
         width: 366px;
     }
