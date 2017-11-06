@@ -6,6 +6,7 @@ Route::group(['middleware'=>['login']],function(){
     Route::get('/', function () {
         return view('index');
     });
+    Route::get('/getname', 'admin\LoginController@getPersonInfo');
     Route::get('/getlogs', 'admin\PayController@selectLogs');
     Route::get('/getlog', 'admin\PayController@selectLog');
     Route::post("/admin/upload", 'admin\PayController@uploadExcel');
