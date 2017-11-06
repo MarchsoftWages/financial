@@ -176,26 +176,27 @@
             selected: function(url) {
                 this.activeUrl = url;
             },
+            /**
+             * 退出的登陆
+             */
             loginout(){
-        this.$confirm('是否确认退出系统', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning'
-         }).then(() => {
-             axios('/loginout');
-              this.$message({
-                type: 'success',
-                message: '退出成功!'
-              });
-              window.location="/";
-        }).catch(() => {
-              this.$message({
-                type: 'info',
-                message: '取消退出'
-              });          
-        });
-               
-                
+                this.$confirm('是否确认退出系统', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      type: 'warning'
+                 }).then(() => {
+                     axios('/loginout');
+                      this.$message({
+                        type: 'success',
+                        message: '退出成功!'
+                      });
+                      window.location="/";
+                }).catch(() => {
+                      this.$message({
+                        type: 'info',
+                        message: '取消退出'
+                      });
+                });
             }
         },
         mounted() {

@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 class QueryController extends Controller
 {
     /**
-     * 查询当前月和上个月的工资，1：当前月，2：上月
+     * 查询当前月和上个月的工资，1：当前月，2：上月,
+     * $type 0:第一批工资，1：第二批工资
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -17,6 +18,7 @@ class QueryController extends Controller
         $job_num = $request->job_num;
         $mobile = $request->mobile;
         $flag = $request->flag;
+        $type = $request->type;
         if($flag == 1){
             $month = date('m',time());
         }else {
@@ -25,7 +27,7 @@ class QueryController extends Controller
         if(strlen($month) == 1){
             $month = '0'.$month;
         }
-        $result = Query::get_current_wages($job_num,$month);
+        $result = Query::get_current_wages($job_num, $month,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
 
@@ -37,6 +39,7 @@ class QueryController extends Controller
     {
         $job_num = $request->job_num;
         $mobile = $request->mobile;
+        $type = $request->type;
         $month = $month = date('m',time());
         $array = [$month,$month-1,$month-2];
         foreach ($array as $key => $value){
@@ -46,7 +49,7 @@ class QueryController extends Controller
                 $data[] = $value.'';
             }
         }
-        $result = Query::get_three($job_num,$data);
+        $result = Query::get_three($job_num,$data,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
 
@@ -59,7 +62,8 @@ class QueryController extends Controller
     {
         $job_num = $request->job_num;
         $month = $request->month;
-        $result = Query::get_current_wages($job_num,$month);
+        $type = $request->type;
+        $result = Query::get_current_wages($job_num, $month,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
 
@@ -72,7 +76,8 @@ class QueryController extends Controller
     {
         $job_num = $request->job_num;
         $month = $request->month;
-        $result = Query::get_year_wages($job_num);
+        $type = $request->type;
+        $result = Query::get_year_wages($job_num,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
 
@@ -84,11 +89,12 @@ class QueryController extends Controller
         $job_num = $request->job_num;
         $start = strtotime($request->start);
         $end = strtotime($request->end);
-        $result = Query::get_query($job_num,$start,$end);
+        $type = $request->type;
+        $result = Query::get_query($job_num,$start,$end,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
     public function test()
     {
-        dump(strtotime('2017-09'));
+
     }
 }

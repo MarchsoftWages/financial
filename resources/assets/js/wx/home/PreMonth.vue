@@ -10,6 +10,9 @@
                     <button-tab-item @click.native="getYear"> 全年 </button-tab-item>
                 </button-tab>
             </div>
+            <group>
+                <x-switch :title="stringValue == 0 ? '第一批' : '第二批'" :value-map="['0', '1']" v-model="stringValue" @on-change="select"></x-switch>
+            </group>
         </div>
         <div class="wages">
             <group v-if="!more">
@@ -20,7 +23,7 @@
                 <x-input title='奖励绩效:' :value="wages['奖励绩效']" readonly text-align="right"></x-input>
                 <x-input title='预增发:' :value="wages['预增发']" readonly text-align="right"></x-input>
                 <x-input title='文明奖:' :value="wages['文明奖']" readonly text-align="right"></x-input>
-                <x-input title='预发(调):' :value="wages['预发（调)']" readonly text-align="right"></x-input>
+                <x-input title='预发(调):' :value="wages['预发调']" readonly text-align="right"></x-input>
                 <x-input title='应发合计:' :value="wages['应发合计']" readonly text-align="right"></x-input>
                 <x-input title='公积金:' :value="wages['公积金']" readonly text-align="right"></x-input>
                 <x-input title='失业保险:' :value="wages['失业保险']" readonly text-align="right"></x-input>
@@ -53,11 +56,11 @@
         text-decoration: none;
     }
     .wages{
-        margin-top: 100px;
+        margin-top: 170px;
     }
 </style>
 <script type="text/ecmascript-6">
-    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore } from 'vux'
+    import { XHeader, XButton,ButtonTab, ButtonTabItem,Cell,Group,XInput,LoadMore,XSwitch } from 'vux'
     export default {
         components:{
             XHeader,
@@ -67,29 +70,39 @@
             Cell,
             Group,
             XInput,
-            LoadMore
+            LoadMore,
+            XSwitch
         },
         data(){
             return {
                 wages:[],
-                more: false
+                more: false,
+                stringValue:'0'
             }
         },
         computed: {},
         methods: {
-            getPre() {      //当月和上月的工资
+            getPre(value) {      //当月和上月的工资
                 this.$vux.loading.show({
                     text: '加载中'
                 })
-                axios.post('/current/get',{job_num:this.$route.params.job_num,flag:2}).then( res => {
+                axios.post('/current/get',{
+                    job_num:this.$route.params.job_num,
+                    flag:2,
+                    type: value
+                }).then( res => {
                     if(res.data.code == 0){
                         res.data.result.first_pay = JSON.parse(res.data.result.first_pay)
                         this.wages = res.data.result.first_pay
+                        this.more = false
                     }else {
                         this.more = true
                     }
                     this.$vux.loading.hide()
                 })
+            },
+            select(value) {
+                this.getPre(value)
             },
             getCurrent() {
                 this.$router.push({path:'/'+this.$route.params.job_num+'/'+this.$route.params.mobile})
@@ -102,7 +115,7 @@
             },
         },
         mounted() {
-            this.getPre()
+            this.getPre(0)
         },
     }
 </script>
