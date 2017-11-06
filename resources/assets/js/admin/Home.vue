@@ -106,7 +106,7 @@
             }
         },
         mounted() {
-
+            this.$emit('path',this.$route.path);
         },
     }
 </script>

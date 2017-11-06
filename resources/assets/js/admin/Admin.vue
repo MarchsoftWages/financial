@@ -27,7 +27,7 @@
                     </div>
                 </td>
                 <td style="background-color: #EEEEEE;height: 100%;" valign="center">
-                    <router-view></router-view>
+                    <router-view v-on:path="selected"></router-view>
                 </td>
             </tr>
         </table>
@@ -190,7 +190,7 @@
                         type: 'success',
                         message: '退出成功!'
                       });
-                      window.location="/";
+                      window.location="/login";
                 }).catch(() => {
                       this.$message({
                         type: 'info',
@@ -200,7 +200,6 @@
             }
         },
         mounted() {
-            this.selected(this.$route.path);
         },
     }
 </script>

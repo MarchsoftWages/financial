@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class Pay extends Model
 {
 
+    /**
+     * 上传工资记录
+     * @param $payArr
+     * @param $payOtherArr
+     * @param $logArr
+     * @return int
+     */
     public static function addExcel($payArr,$payOtherArr,$logArr)
     {
         DB::beginTransaction();
@@ -55,6 +62,11 @@ class Pay extends Model
 
     }
 
+    /**
+     * 删除日志
+     * @param $flag
+     * @return int
+     */
     public static function deleteExcel($flag){
         DB::beginTransaction();
         try {
@@ -78,15 +90,23 @@ class Pay extends Model
      * 获取日志
      * @return mixed
      */
-    public static function getLogs($type){
+    public static function getLogs($type,$size){
         $datas = DB::table('operation_log')->orderBy('upload_time','desc')
             ->select('file_name','operater','upload_time','mark','type','state');
         if ($type==1)
-            return $datas->where('type',0)->paginate(5);
+            return $datas->where('type',0)->paginate($size);
         if ($type==2)
-            return $datas->where('type',1)->paginate(5);
-        return $datas->paginate(5);
+            return $datas->where('type',1)->paginate($size);
+        return $datas->paginate($size);
     }
+
+    /**
+     * 条件查找日志
+     * @param $type
+     * @param $input
+     * @param $value
+     * @return bool
+     */
     public static function getLog($type,$input,$value){
         $data = DB::table('operation_log')->orderBy('upload_time','desc')
             ->select('file_name','operater','upload_time','mark','type','state');

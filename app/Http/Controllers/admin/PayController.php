@@ -83,7 +83,8 @@ class PayController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 	public function selectLogs(Request $request){
-        $lists = Pay::getLogs($request->type);
+        $size = $request->size?$request->size:5;
+        $lists = Pay::getLogs($request->type,$size);
         return $lists?responseToJson(0,"success",$lists):responseToJson(0,"failed","没有查询结果");
     }
 
