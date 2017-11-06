@@ -48,7 +48,7 @@
     position:fixed;
   }
 </style>
-<script type="text/ecmascript-6">
+<script scoped>
     import { Loading } from 'element-ui'
     export default {
         data(){

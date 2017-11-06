@@ -106,9 +106,6 @@
         margin: 0 20px;
         border-radius: 1%;
     }
-    .el-upload-dragger {
-        width: 366px;
-    }
     .el-breadcrumb {
         display: flex;
         justify-content: center;
