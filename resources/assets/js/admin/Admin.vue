@@ -17,7 +17,7 @@
                             <template v-for="link in links">
                                 <li @click="selected(link.url)"
                                     :class="{active: activeUrl == link.url}">
-                                    <router-link :to='link.url'><i class="ion-ios-folder"></i>{{link.name}}</router-link>
+                                    <router-link :to='link.url'><i :class="link.className"></i>{{link.name}}</router-link>
                                 </li>
                             </template>
                         </ul>
@@ -150,22 +150,25 @@
     export default {
         data(){
             return {
-                user: [{
+                user: {
                     name:'username',
                     avarar:''
-                }],
+                },
                 links:[
                     {
                         url:'/',
-                        name:"工资导入"
+                        name:"工资导入",
+                        className:'ion-ios-folder'
                     },
                     {
                         url:'/log',
-                        name:"日志查看"
+                        name:"日志查看",
+                        className:'el-icon-date'
                     },
                     {
                         url:'/change',
-                        name:"修改密码"
+                        name:"修改密码",
+                        className:'el-icon-setting'
                     }
                 ],
                 activeUrl:"",
@@ -200,6 +203,13 @@
             }
         },
         mounted() {
+            var this_ = this;
+            axios.get(url)
+                .then(function (response) {
+
+                }).catch(function (response) {
+                console.log(response.data);
+            });
         },
     }
 </script>
