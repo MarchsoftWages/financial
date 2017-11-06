@@ -27,7 +27,7 @@
                     </div>
                 </td>
                 <td style="background-color: #EEEEEE;height: 100%;" valign="center">
-                    <router-view></router-view>
+                    <router-view v-on:path="selected"></router-view>
                 </td>
             </tr>
         </table>
@@ -200,7 +200,6 @@
             }
         },
         mounted() {
-            this.selected(this.$route.path);
         },
     }
 </script>

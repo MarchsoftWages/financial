@@ -86,24 +86,34 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div align="center" v-show="changeSearch==0">
+        <div class="pagination" v-show="changeSearch==0">
             <el-pagination
+                    @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page.sync="pageData.current_page"
-                    :page-size="5"
-                    layout="prev, pager, next, jumper"
+                    :page-sizes="[5, 10]"
+                    :page-size="this.size"
+                    layout="total, sizes, prev, pager, next, jumper"
                     :total='pageData.total'>
             </el-pagination>
         </div>
     </div>
 </template>
 <style>
+    .el-table-self{
+        height: 560px;
+        background-color: #fff;
+        margin: 0 20px;
+        border-radius: 1%;
+    }
     .el-upload-dragger {
         width: 366px;
     }
     .el-breadcrumb {
         display: flex;
         justify-content: center;
+        padding: 15px 0;
+        background-color: gainsboro;
     }
     .el-radio-group {
         display: flex;
@@ -112,6 +122,13 @@
     .el-input {
         width: 193px;
         margin: 0 10px;
+    }
+    .pagination{
+        padding: 10px 0;
+    }
+    .el-pagination {
+        display: flex;
+        justify-content: center;
     }
 </style>
 <script type="text/ecmascript-6">
@@ -147,6 +164,7 @@
                 changeSearch:0,
                 radio:0,
                 oldRadio:0,
+                size:5,
                 input:'',
                 value:'',
                 search:[
@@ -180,6 +198,14 @@
              */
             handleCurrentChange(val) {
                 this.getData('/getlogs?page='+val+'&type='+this.radio,0);
+            },
+            /**
+             * 显示页数
+             * @param val
+             */
+            handleSizeChange(val){
+                this.size = val;
+                this.getData('/getlogs?size='+val+'&type='+this.radio,0);
             },
             /**
              * @param row
@@ -286,6 +312,9 @@
                 this.loadingInstance = Loading.service({ fullscreen: true });
                 return extension || extension2 && isLt2M
             },
+            /**
+             * 分批次显示
+             */
             getRadio(){
                 if(this.radio!=this.oldRadio){
                     this.loadingInstance = Loading.service({ fullscreen: true });
@@ -294,9 +323,16 @@
                 this.oldRadio=this.radio;
 
             },
+            /**
+             * 格式化日期
+             * @param val
+             */
             dateChange(val){
                 this.value = val;
             },
+            /**
+             * 根据条件查找
+             */
             searchLog(){
                 this.loadingInstance = Loading.service({ fullscreen: true });
                 if(this.input!=""||this.value!=""){
@@ -309,6 +345,7 @@
         mounted() {
             this.loadingInstance = Loading.service({ fullscreen: true });
             this.getData('/getlogs?page=1&type='+this.radio,0);
+            this.$emit('path',this.$route.path);
         },
     }
 </script>
