@@ -49,9 +49,6 @@ body{
 	margin-top: 10%;
 	box-shadow: 1px 1px 3px 3px #cccccc;
 }
-form{
-	padding: 10px 0 30px 0;
-}
 h2{
 	margin-left: 35%;
 }
@@ -92,7 +89,7 @@ table{
 		border: 1px solid #cccccc;
 	}
 	.form{
-		height: 290px;
+		height: 330px;
 		width: 430px;
 		background-color: #fff;
 		border-radius: 6px;

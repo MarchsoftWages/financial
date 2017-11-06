@@ -43,9 +43,7 @@
         margin: 0 auto;
         margin-top: 13px;
     }
-    .button-tab a{
-        text-decoratin: none;
-    }
+
     .wages{
         margin-top: 170px;
     }

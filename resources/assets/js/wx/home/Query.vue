@@ -6,7 +6,7 @@
         <div class="wages">
             <group>
                 <datetime v-model="start" format="YYYY-MM" title="开始时间"></datetime>
-                <datetime v-model="end" format="YYYY-MM" title="开始时间"></datetime>
+                <datetime v-model="end" format="YYYY-MM" title="结束时间"></datetime>
                     <selector ref="defaultValueRef" title="批次" :options="select" v-model="value"></selector>
             </group>
             <div class="query-button">
