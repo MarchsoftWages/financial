@@ -91,7 +91,7 @@
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                     :current-page.sync="pageData.current_page"
-                    :page-sizes="[5, 10]"
+                    :page-sizes="[5, 10, 50]"
                     :page-size="this.size"
                     layout="total, sizes, prev, pager, next, jumper"
                     :total='pageData.total'>
@@ -101,7 +101,7 @@
 </template>
 <style>
     .el-table-self{
-        height: 560px;
+        min-height: 560px;
         background-color: #fff;
         margin: 0 20px;
         border-radius: 1%;
@@ -110,7 +110,6 @@
         display: flex;
         justify-content: center;
         padding: 15px 0;
-        background-color: gainsboro;
     }
     .el-radio-group {
         display: flex;
