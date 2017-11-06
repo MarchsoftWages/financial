@@ -190,7 +190,7 @@
                         type: 'success',
                         message: '退出成功!'
                       });
-                      window.location="/";
+                      window.location="/login";
                 }).catch(() => {
                       this.$message({
                         type: 'info',
