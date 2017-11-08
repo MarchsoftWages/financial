@@ -16,11 +16,18 @@
             </group>
         </div>
         <div class="wages">
-            <group v-if="!more" v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_month)">
+            <group v-if="!more && list[0].type == 0" v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_month)">
                 <div class="list">
                     <span>工资实发额：</span>
                     <span class="gt-icon"><i>&gt;</i></span>
-                    <span class="total" > {{ item.first_pay['工资实发额'] }} </span>
+                    <span class="total" > {{ item.wages['工资实发额'] }} </span>
+                </div>
+            </group>
+            <group v-if="!more && list[0].type == 1" v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_month)">
+                <div class="list">
+                    <span>第二批工资：</span>
+                    <span class="gt-icon"><i>&gt;</i></span>
+                    <span class="total" > {{ '点击查看详情' }} </span>
                 </div>
             </group>
             <div style="margin-top: 120px;" v-if="more">
@@ -100,7 +107,7 @@
                     if(res.data.code == 0){
                         let data = res.data.result
                         for (let i in data){
-                            data[i].first_pay = JSON.parse(data[i].first_pay)
+                            data[i].wages = JSON.parse(data[i].wages)
                         }
                         this.list = data
                         this.more = false
