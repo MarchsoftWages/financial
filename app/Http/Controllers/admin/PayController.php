@@ -141,7 +141,7 @@ class PayController extends Controller
                     $jsonArr[$key] = $value;
                 $index++;
             }
-            $pay[$cpyId==0?'first_pay':'second_pay'] = json_encode($jsonArr);
+            $pay['wages'] = json_encode($jsonArr);
             $pay['type'] = $cpyId;
             $pay['flag'] = $flag;
             $payArr[] = $pay;
