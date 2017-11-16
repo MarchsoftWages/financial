@@ -146,31 +146,12 @@ table{
 	margin-left: 10px;
 	color: red;
 	width: auto;
-	 display: inherit;
 }
 
  </style>
 </head>
 <body>
 <div class="top">
-	@if(count($errors))
-	<div class="error" id="errors" >
-	  <div class="alert alert-error">
-	    <div class="close" data-dismiss="alert" onclick="closes()">×</div>
-	    @foreach($errors as $error)
-	      <strong>Error!</strong>{{$error->first()}}
-	    @endforeach  
-	   </div>
-	</div>
-	 @endif
-	 @if(Session::has('wrro'))
-	 <div class="error" id="errors" >
-	  <div class="alert alert-error">
-	    <div class="close" data-dismiss="alert" onclick="closes()">×</div>
-	      <strong>Error!</strong>{{Session::get('wrro')}}
-	   </div>
-	</div>
-	  @endif
 	<div class="form">
 		<form onsubmit="return toVaild()" enctype="multipart/form-data"  method="post" action="{{url('checkLogin')}}">
 		{{csrf_field()}}
@@ -181,19 +162,24 @@ table{
 
 		 	</tr>
 		 	<tr>
-		 		<td ><p id="user" class="wrong"></p></td>
+		 		 @if(Session::has('nameerror'))
+		 		 <td ><p id="user" class="wrong">{{Session::get('nameerror')}}</p></td>
+		 		 @endif
 		 	</tr>
 		 	<tr>
 		 		<td ><input type="password" name="user[password]" id="password" placeholder="密码" class="in" value="{{old('user')['password']}}"></td>
 		 	</tr>
 		 	<tr>
 		 		<td ><p id="pass" class="wrong"></p></td>
+
 		 	</tr>
 		 	<tr>
 		 		<td><input type="text" name="user[Captcha]" class="captcha" id="Captcha"><img        src="{{ url('captcha/1') }}" onclick="this.src='{{url('captcha/1')}}?'+Math.random();"  style="margin-bottom: -12px;"></td>
 		 	</tr>
 		 	<tr>
-		 		<td ><p id="cap" class="wrong"></p></td>
+		 		 @if(Session::has('codeerror'))
+		 		<td ><p id="cap" class="wrong">{{Session::get('codeerror')}}</p></td>
+		 		@endif
 		 	</tr>
 		 	<tr><td><input type="submit" name="submit" value="登录" class="in" id="submit"></td></tr>
 		 	</tr>
@@ -250,6 +236,7 @@ table{
 			$("#cap").html('验证码输入错误');
 			return false;
 		}else{
+			$(".wrong").remove();
 			return true;
 		} 
 	}

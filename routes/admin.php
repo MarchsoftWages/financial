@@ -14,4 +14,5 @@ Route::group(['middleware'=>['login']],function(){
     Route::post("/loginout",'admin\LoginController@loginout');
 });
 
-
+//Route::get('/aaaa','admin\PayController@urlPost');
+//Route::post('/vendor/salary/send_notify','admin\TestController@test');

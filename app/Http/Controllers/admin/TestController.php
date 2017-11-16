@@ -6,9 +6,8 @@ use App\Models\Admin;
 
 class TestController extends Controller
 {
-    public function test()
-    {
-        $result = Admin::get_user();
-        return responseToJson(0,'success',$result);
-    }
+//    public function test($detail_list)
+//    {
+//        return view('welcome');
+//    }
 }
