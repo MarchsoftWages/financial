@@ -99,7 +99,7 @@ class QueryController extends Controller
         /*$data = ['detail_list'=>json_encode(['code'=>'2015001','name'=>'wangqihang'])];
         $result = curlGet('http://hist.marchsoft.cn/salary/send_notify','post',$data);
         return $result;*/
-        $data = ['detail_list'=>json_encode(['code'=>'2015001','name'=>'wangqihang'])];
+       /* $data = ['detail_list'=>json_encode(['code'=>'2015001','name'=>'wangqihang'])];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://hist.marchsoft.cn/salary/send_notify');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -107,6 +107,7 @@ class QueryController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         $output = curl_exec($ch);
         curl_close($ch);
-        return $output;
+        return $output;*/
+       dump(storage_path());
     }
 }
