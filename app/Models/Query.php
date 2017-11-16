@@ -28,7 +28,11 @@ class Query extends Model
     public static function get_three($job_num,$month,$type = 0)
     {
         $year = date('Y',time());
-        $result = DB::table('pay')->where(['job_num'=>$job_num,'pay_year'=>$year,'status'=>0,'type'=>$type])->whereIn('pay_month',$month)->get();
+        $result = DB::table('pay')
+            ->where(['job_num'=>$job_num,'pay_year'=>$year,'status'=>0,'type'=>$type])
+            ->whereIn('pay_month',$month)
+            ->orderBy('wages_date','desc')
+            ->get();
         return !$result->isEmpty() ? $result : 0;
     }
 
@@ -40,7 +44,10 @@ class Query extends Model
     public static function get_year_wages($job_num,$type)
     {
         $year = date('Y',time());
-        $result = DB::table('pay')->where(['job_num'=>$job_num,'pay_year'=>$year,'status'=>0,'type'=>$type])->get();
+        $result = DB::table('pay')
+            ->where(['job_num'=>$job_num,'pay_year'=>$year,'status'=>0,'type'=>$type])
+            ->orderBy('wages_date','desc')
+            ->get();
         return !$result->isEmpty() ? $result : 0;
     }
 
