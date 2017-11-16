@@ -81,6 +81,7 @@
              * @param fileList
              */
             uploadError (response, file, fileList) {
+                this.loadingInstance.close();
                 this.$message.error('上传失败，请重试！');
             },
             /**

@@ -16,3 +16,6 @@ Route::group(['middleware'=>['login']],function(){
 
 //Route::get('/aaaa','admin\PayController@urlPost');
 //Route::post('/vendor/salary/send_notify','admin\TestController@test');
+//Route::get('/bbbb',function (){
+//    return view('welcome');
+//});

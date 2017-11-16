@@ -6,8 +6,8 @@ use App\Models\Admin;
 
 class TestController extends Controller
 {
-//    public function test($detail_list)
-//    {
-//        return view('welcome');
-//    }
+    public function test()
+    {
+//        return redirect('bbbb');
+    }
 }
