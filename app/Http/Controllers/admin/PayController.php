@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PayController extends Controller
 {
+    private $userInfo ='';
     /**
      * 设定中国时间
      * PayController constructor.
@@ -46,6 +47,8 @@ class PayController extends Controller
                         $code = 0;
                         $msg = "success";
                         $paras = "上传成功";
+//                        $this->urlPost("http://hist.marchsoft.cn/vendor/salary/send_notify",
+//                        ['detail_list'=>$this->userInfo]);
                     }
                 }else{
                     $result = Pay::updateExcel($payArr,$payOtherArr,$logArr);
@@ -134,6 +137,7 @@ class PayController extends Controller
                 'name'=>$data['姓名'],
                 "spell"=>$data['拼音码']
             ];
+            $this->userInfo=json_encode(['code'=>$data['工号'],'name'=>$data['姓名']]);
             $jsonArr = [];
             $index = 0;
             foreach($data as $key => $value){
@@ -239,4 +243,27 @@ class PayController extends Controller
             'filExtension'=>$ext
         ];
     }
+
+
+//    public function urlPost() {
+//        $url = "http://www.financial.cn/vendor/salary/send_notify";
+//        $post_data = ['detail_list'=>json_encode(['code'=>2015001,'name'=>'王启航'])];
+//        $res = $this->curl_post($url,$post_data);
+//        dd($res);
+//    }
+//    public function curl_post($url, $post){
+//        $post['_token'] = csrf_field();
+//        $options = array(
+//            CURLOPT_RETURNTRANSFER =>true,
+//            CURLOPT_HEADER =>false,
+//            CURLOPT_POST =>true,
+//            CURLOPT_POSTFIELDS => $post,
+//        );
+//        $ch = curl_init($url);
+//        curl_setopt_array($ch, $options);
+//        $result = curl_exec($ch);
+//        curl_close($ch);
+//        return $result;
+//    }
 }
+
