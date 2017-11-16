@@ -25,7 +25,6 @@ class PayController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 	public function uploadExcel(Request $request){
-
         $fileInfo = $this->getFiles($request->file('file'));
         $cpyId = $request->cpyId;
         $flag=($request->updateType==1?uniqid():$request->flag);
@@ -35,12 +34,12 @@ class PayController extends Controller
         if($fileInfo['isValid']){	//判断文件是否上传成功
             if (!$fileInfo['isExcel'])
                 return responseToJson(1,"failed","文件类型错误");
-            $bool = Storage::disk('uploads')->put($fileInfo['originalName'],file_get_contents($fileInfo['fileRealpath']));
+            $bool = Storage::disk('uploads')->put($fileInfo['fileRealName'].'.'.$fileInfo['filExtension'],file_get_contents($fileInfo['fileRealpath']));
             if ($bool){
-                $excel = $this->readExcel($fileInfo['fileName'],$fileInfo['filExtension']);
+                $excel = $this->readExcel($fileInfo['fileRealName'],$fileInfo['filExtension']);
                 $payArr = $this->getPayArray($excel,$cpyId,$flag);
                 $payOtherArr = $this->getPayOtherArr($excel,$flag);
-                $logArr = $this->getLogArr($fileInfo['fileName'],$flag,$cpyId);
+                $logArr = $this->getLogArr([$fileInfo['fileName'],$fileInfo['fileRealName']],$flag,$cpyId);
                 if($request->updateType==1){
                     $result = Pay::addExcel($payArr,$payOtherArr,$logArr);
                     if (!$result){
@@ -108,7 +107,7 @@ class PayController extends Controller
      * @return array          excel数组
      */
     public function readExcel($fileName,$fileType){
-        $filePath = 'storage/app/uploads/'.iconv('UTF-8', 'GBK', $fileName).".".$fileType;
+        $filePath = storage_path().'/app/uploads/'.iconv('UTF-8','GBK',$fileName).".".$fileType;
         $data=[];
         Excel::selectSheets('Sheet1')->load($filePath, function($reader) use (&$data){
             $data=$reader->toArray();
@@ -213,7 +212,8 @@ class PayController extends Controller
         $operationLog = [];
         $operation = [
             'operater' => Session::get('checkLogin'),
-            'file_name' => $fileName,
+            'file_name' => $fileName[0],
+            'real_name' => $fileName[1],
             'upload_time' => time(),
             'mark' => $flag,
             'type' => $cypId
@@ -233,11 +233,12 @@ class PayController extends Controller
         $ext = $file->getClientOriginalExtension();    //文件拓展名
         $isExcel=starts_with($file->getClientMimeType(), 'application/');  //文件类型正确错误
         $fileName=explode(".",$originalName)[0];  //文件名
+        $fileRealName = date('Y-m-d-h-m-s').'-'.uniqid();
         $realPath = $file->getRealPath();   //临时文件的绝对路径
         return [
             'isValid'=>$isValid,
-            'originalName'=>$originalName,
             'fileName'=>$fileName,
+            'fileRealName'=>$fileRealName,
             'fileRealpath'=>$realPath,
             'isExcel'=>$isExcel,
             'filExtension'=>$ext
@@ -252,7 +253,8 @@ class PayController extends Controller
 //        dd($res);
 //    }
 //    public function curl_post($url, $post){
-//        $post['_token'] = csrf_field();
+//        $post['token'] = csrf_token();
+//        dd($post);
 //        $options = array(
 //            CURLOPT_RETURNTRANSFER =>true,
 //            CURLOPT_HEADER =>false,
