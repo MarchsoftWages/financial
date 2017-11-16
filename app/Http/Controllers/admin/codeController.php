@@ -21,5 +21,4 @@ class codeController extends Controller{
 		ob_clean();
 		return response($builder->output())->header('Content-type','image/jpeg');
 	}
-	
 }
