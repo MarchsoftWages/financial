@@ -188,12 +188,21 @@
                       cancelButtonText: '取消',
                       type: 'warning'
                  }).then(() => {
-                     axios('/loginout');
-                      this.$message({
-                        type: 'success',
-                        message: '退出成功!'
-                      });
-                      window.location="/login";
+                   
+                     axios.post('/loginout').then(res=>{
+                        if(res.data.code == 0){
+                            this.$message({
+                            type: 'success',
+                            message: '退出成功!'
+                            });
+                            window.location="/login";
+                        }else{
+                            this.$message({
+                            type: 'error',
+                            message: '退出失败!'
+                            });
+                        }
+                     })
                 }).catch(() => {
                       this.$message({
                         type: 'info',

@@ -209,6 +209,12 @@ table{
     });
 </script>
 <script type="text/javascript">
+    window.onload=function(){
+    	   history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+    }
 	function toVaild(){
 		let name = $('#name').val();
 		let password = $('#password').val();
@@ -244,7 +250,6 @@ table{
 	function closes(){
 		$("#errors").remove();
 	} 
-
 </script>
 
 </body>

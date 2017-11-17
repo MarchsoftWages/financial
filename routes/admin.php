@@ -12,6 +12,7 @@ Route::group(['middleware'=>['login']],function(){
     Route::post("/admin/upload", 'admin\PayController@uploadExcel');
     Route::post("/admin/delete", 'admin\PayController@deleteExcel');
     Route::post("/loginout",'admin\LoginController@loginout');
+   
 });
 
 
