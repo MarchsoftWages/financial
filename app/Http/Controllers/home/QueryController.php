@@ -65,9 +65,10 @@ class QueryController extends Controller
     public function get_detail(Request $request)
     {
         $job_num = $request->job_num;
+        $year = $request->year;
         $month = $request->month;
         $type = $request->type;
-        $result = Query::get_current_wages($job_num, $month,$type);
+        $result = Query::get_current_wages($job_num,$year, $month,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
 

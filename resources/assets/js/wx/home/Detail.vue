@@ -92,6 +92,7 @@
                 })
                 axios.post('/detail/get',{
                     job_num:this.$route.params.job_num,
+                    year: this.$route.params.year,
                     month:this.$route.params.month,
                     type: this.$route.params.type,
                 }).then( res => {
