@@ -258,6 +258,7 @@
                         this_.$message.error(response.data.result);
                 }).catch(function (response) {
                     console.log(response.data);
+                    this_.loadingInstance.close();
                 });
 
             },

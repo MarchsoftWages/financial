@@ -4,6 +4,7 @@ namespace App\Http\Controllers\home;
 use App\Http\Controllers\Controller;
 use App\Models\Query;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
 class QueryController extends Controller
 {
@@ -95,6 +96,18 @@ class QueryController extends Controller
     }
     public function test()
     {
-
+        /*$data = ['detail_list'=>json_encode(['code'=>'2015001','name'=>'wangqihang'])];
+        $result = curlGet('http://hist.marchsoft.cn/salary/send_notify','post',$data);
+        return $result;*/
+       /* $data = ['detail_list'=>json_encode(['code'=>'2015001','name'=>'wangqihang'])];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'http://hist.marchsoft.cn/salary/send_notify');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        $output = curl_exec($ch);
+        curl_close($ch);
+        return $output;*/
+       dump(storage_path());
     }
 }

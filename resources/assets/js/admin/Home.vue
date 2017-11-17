@@ -13,6 +13,7 @@
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过2mb</div>
             </el-upload>
+            <a class="download first-file" >第一批工资模板</a>
         </div>
         <div @click="setCpyid(1)">
             <el-upload class="upload-demo" drag :show-file-list="false"
@@ -27,6 +28,7 @@
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过2mb</div>
             </el-upload>
+            <a class="download second-file" >第二批工资模板</a>
         </div>
     </div>
 </template>
@@ -38,6 +40,14 @@
         font-size: 180px;
         line-height: 180px;
         margin: 0 0 16px;
+    }
+    .download{
+        color: red;
+        display: flex;
+        font-size: 26px;
+        justify-content: center;
+        margin-top: 20px;
+        text-decoration: none;
     }
 </style>
 <script type="text/ecmascript-6">
@@ -81,6 +91,7 @@
              * @param fileList
              */
             uploadError (response, file, fileList) {
+                this.loadingInstance.close();
                 this.$message.error('上传失败，请重试！');
             },
             /**
@@ -103,10 +114,12 @@
             },
             setCpyid(val){
                 this.upLoadData.cpyId = val;
-            }
+            },
         },
         mounted() {
             this.$emit('path',this.$route.path);
+            $('.first-file').attr('href',"http://"+ location.host +"/download?downloadType=0");
+            $('.second-file').attr('href',"http://"+ location.host +"/download?downloadType=1");
         },
     }
 </script>

@@ -9,10 +9,12 @@ Route::group(['middleware'=>['login']],function(){
     Route::get('/getname', 'admin\LoginController@getPersonInfo');
     Route::get('/getlogs', 'admin\PayController@selectLogs');
     Route::get('/getlog', 'admin\PayController@selectLog');
+    Route::get('/download', 'admin\PayController@downloadFile');
     Route::post("/admin/upload", 'admin\PayController@uploadExcel');
     Route::post("/admin/delete", 'admin\PayController@deleteExcel');
     Route::post("/loginout",'admin\LoginController@loginout');
    
 });
 
-
+//Route::get('/aaaa','admin\PayController@urlPost');
+//Route::post('/vendor/salary/send_notify','admin\TestController@test');

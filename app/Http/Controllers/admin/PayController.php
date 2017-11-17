@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PayController extends Controller
 {
+    private $userInfo ='';
     /**
      * 设定中国时间
      * PayController constructor.
@@ -24,7 +25,6 @@ class PayController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 	public function uploadExcel(Request $request){
-
         $fileInfo = $this->getFiles($request->file('file'));
         $cpyId = $request->cpyId;
         $flag=($request->updateType==1?uniqid():$request->flag);
@@ -34,18 +34,20 @@ class PayController extends Controller
         if($fileInfo['isValid']){	//判断文件是否上传成功
             if (!$fileInfo['isExcel'])
                 return responseToJson(1,"failed","文件类型错误");
-            $bool = Storage::disk('uploads')->put($fileInfo['originalName'],file_get_contents($fileInfo['fileRealpath']));
+            $bool = Storage::disk('uploads')->put($fileInfo['fileRealName'].'.'.$fileInfo['filExtension'],file_get_contents($fileInfo['fileRealpath']));
             if ($bool){
-                $excel = $this->readExcel($fileInfo['fileName'],$fileInfo['filExtension']);
+                $excel = $this->readExcel($fileInfo['fileRealName'],$fileInfo['filExtension']);
                 $payArr = $this->getPayArray($excel,$cpyId,$flag);
                 $payOtherArr = $this->getPayOtherArr($excel,$flag);
-                $logArr = $this->getLogArr($fileInfo['fileName'],$flag,$cpyId);
+                $logArr = $this->getLogArr([$fileInfo['fileName'],$fileInfo['fileRealName']],$flag,$cpyId);
                 if($request->updateType==1){
                     $result = Pay::addExcel($payArr,$payOtherArr,$logArr);
                     if (!$result){
                         $code = 0;
                         $msg = "success";
                         $paras = "上传成功";
+//                        $this->urlPost("http://hist.marchsoft.cn/vendor/salary/send_notify",
+//                        ['detail_list'=>$this->userInfo]);
                     }
                 }else{
                     $result = Pay::updateExcel($payArr,$payOtherArr,$logArr);
@@ -105,7 +107,7 @@ class PayController extends Controller
      * @return array          excel数组
      */
     public function readExcel($fileName,$fileType){
-        $filePath = 'storage/app/uploads/'.iconv('UTF-8', 'GBK', $fileName).".".$fileType;
+        $filePath = storage_path().'/app/uploads/'.iconv('UTF-8','GBK',$fileName).".".$fileType;
         $data=[];
         Excel::selectSheets('Sheet1')->load($filePath, function($reader) use (&$data){
             $data=$reader->toArray();
@@ -134,6 +136,7 @@ class PayController extends Controller
                 'name'=>$data['姓名'],
                 "spell"=>$data['拼音码']
             ];
+            $this->userInfo=json_encode(['code'=>$data['工号'],'name'=>$data['姓名']]);
             $jsonArr = [];
             $index = 0;
             foreach($data as $key => $value){
@@ -209,7 +212,8 @@ class PayController extends Controller
         $operationLog = [];
         $operation = [
             'operater' => Session::get('checkLogin'),
-            'file_name' => $fileName,
+            'file_name' => $fileName[0],
+            'real_name' => $fileName[1],
             'upload_time' => time(),
             'mark' => $flag,
             'type' => $cypId
@@ -229,14 +233,55 @@ class PayController extends Controller
         $ext = $file->getClientOriginalExtension();    //文件拓展名
         $isExcel=starts_with($file->getClientMimeType(), 'application/');  //文件类型正确错误
         $fileName=explode(".",$originalName)[0];  //文件名
+        $fileRealName = date('Y-m-d-h-m-s').'-'.uniqid();
         $realPath = $file->getRealPath();   //临时文件的绝对路径
         return [
             'isValid'=>$isValid,
-            'originalName'=>$originalName,
             'fileName'=>$fileName,
+            'fileRealName'=>$fileRealName,
             'fileRealpath'=>$realPath,
             'isExcel'=>$isExcel,
             'filExtension'=>$ext
         ];
     }
+
+    public function downloadFile(Request $request){
+        $downloadFileName = $request->downloadType==0?'第一批工资模板.xlsx':'第二批工资模板.xlsx';
+        $file = storage_path().'/app/public/'.$downloadFileName;
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+    }
+
+
+//    public function urlPost() {
+//        $url = "http://www.financial.cn/vendor/salary/send_notify";
+//        $post_data = ['_token'=>csrf_token(),'detail_list'=>json_encode(['code'=>2015001,'name'=>'王启航'])];
+//        $this->curlPost($url,$post_data);
+//    }
+//    function curlPost($url, $data=''){
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_URL, $url);
+//        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 对认证证书来源的检查
+//        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // 从证书中检查SSL加密算法是否存在
+//        curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
+//        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1); // 使用自动跳转
+//        curl_setopt($curl, CURLOPT_AUTOREFERER, 1);
+//        curl_setopt($curl, CURLOPT_POST, 1);
+//        if ($data != '')
+//            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+//        curl_setopt($curl, CURLOPT_TIMEOUT, 30); // 设置超时限制防止死循环
+//        curl_setopt($curl, CURLOPT_HEADER, 0);
+//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+//        $tmpInfo = curl_exec($curl);
+//        curl_close($curl);
+//        return $tmpInfo;
+//    }
 }
+
