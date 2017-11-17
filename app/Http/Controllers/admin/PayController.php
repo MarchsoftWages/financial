@@ -245,27 +245,43 @@ class PayController extends Controller
         ];
     }
 
+    public function downloadFile(Request $request){
+        $downloadFileName = $request->downloadType==0?'第一批工资模板.xlsx':'第二批工资模板.xlsx';
+        $file = storage_path().'/app/public/'.$downloadFileName;
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file));
+        readfile($file);
+    }
+
 
 //    public function urlPost() {
 //        $url = "http://www.financial.cn/vendor/salary/send_notify";
-//        $post_data = ['detail_list'=>json_encode(['code'=>2015001,'name'=>'王启航'])];
-//        $res = $this->curl_post($url,$post_data);
-//        dd($res);
+//        $post_data = ['_token'=>csrf_token(),'detail_list'=>json_encode(['code'=>2015001,'name'=>'王启航'])];
+//        $this->curlPost($url,$post_data);
 //    }
-//    public function curl_post($url, $post){
-//        $post['token'] = csrf_token();
-//        dd($post);
-//        $options = array(
-//            CURLOPT_RETURNTRANSFER =>true,
-//            CURLOPT_HEADER =>false,
-//            CURLOPT_POST =>true,
-//            CURLOPT_POSTFIELDS => $post,
-//        );
-//        $ch = curl_init($url);
-//        curl_setopt_array($ch, $options);
-//        $result = curl_exec($ch);
-//        curl_close($ch);
-//        return $result;
+//    function curlPost($url, $data=''){
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_URL, $url);
+//        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 对认证证书来源的检查
+//        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // 从证书中检查SSL加密算法是否存在
+//        curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
+//        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1); // 使用自动跳转
+//        curl_setopt($curl, CURLOPT_AUTOREFERER, 1);
+//        curl_setopt($curl, CURLOPT_POST, 1);
+//        if ($data != '')
+//            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+//        curl_setopt($curl, CURLOPT_TIMEOUT, 30); // 设置超时限制防止死循环
+//        curl_setopt($curl, CURLOPT_HEADER, 0);
+//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+//        $tmpInfo = curl_exec($curl);
+//        curl_close($curl);
+//        return $tmpInfo;
 //    }
 }
 
