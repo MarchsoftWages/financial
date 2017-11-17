@@ -92,7 +92,12 @@ class LoginController extends Controller
 
     function loginout(){
         session(['checkLogin' =>null]);
-        return responseToJson(0,'success','/login');
+
+        if(Session::get('checkLogin') == null)
+          return responseToJson(0,'success','/login');
+        else{
+           return responseToJson(1,'error','/login');
+        }
     }
 
     public function getPersonInfo(){
