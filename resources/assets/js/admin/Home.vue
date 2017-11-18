@@ -13,7 +13,7 @@
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过2mb</div>
             </el-upload>
-            <a class="download first-file" >第一批工资模板</a>
+            <a class="download first-file">第一批工资模板</a>
         </div>
         <div @click="setCpyid(1)">
             <el-upload class="upload-demo" drag :show-file-list="false"
@@ -28,7 +28,7 @@
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过2mb</div>
             </el-upload>
-            <a class="download second-file" >第二批工资模板</a>
+            <a class="download second-file">第二批工资模板</a>
         </div>
     </div>
 </template>
@@ -42,9 +42,9 @@
         margin: 0 0 16px;
     }
     .download{
-        color: red;
+        color: #bdabab;
         display: flex;
-        font-size: 26px;
+        font-size: 10px;
         justify-content: center;
         margin-top: 20px;
         text-decoration: none;

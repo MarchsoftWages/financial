@@ -3,6 +3,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pay;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -41,16 +42,15 @@ class PayController extends Controller
                 $payOtherArr = $this->getPayOtherArr($excel,$flag);
                 $logArr = $this->getLogArr([$fileInfo['fileName'],$fileInfo['fileRealName']],$flag,$cpyId);
                 if($request->updateType==1){
-                    $result = Pay::addExcel($payArr,$payOtherArr,$logArr);
+                    $result = Pay::addExcel($payArr[0],$payOtherArr,$logArr);
                     if (!$result){
+                        $this->postInfo($payArr[1]);
                         $code = 0;
                         $msg = "success";
                         $paras = "上传成功";
-//                        $this->urlPost("http://hist.marchsoft.cn/vendor/salary/send_notify",
-//                        ['detail_list'=>$this->userInfo]);
                     }
                 }else{
-                    $result = Pay::updateExcel($payArr,$payOtherArr,$logArr);
+                    $result = Pay::updateExcel($payArr[0],$payOtherArr,$logArr);
                     if (!$result){
                         $code = 0;
                         $msg = "success";
@@ -124,10 +124,11 @@ class PayController extends Controller
      */
     public function getPayArray($datas,$cpyId,$flag){
         $payArr=[];
+        $postArr=[];
         foreach ($datas as $data){
             $year = substr($data['工资年月'],0,4);
             $month = substr($data['工资年月'],4,2);
-            $timeStamp = strtotime($year."-".$month."-00 00:00:00");
+            $timeStamp = strtotime($year."-".$month."-01 00:00:00");
             $pay=[
                 'job_num'=>$data['工号'],
                 'pay_year'=> $year,
@@ -135,6 +136,13 @@ class PayController extends Controller
                 'wages_date'=>$timeStamp,
                 'name'=>$data['姓名'],
                 "spell"=>$data['拼音码']
+            ];
+            $post=[
+                'code'=>$data['工号'],
+                'name'=>$data['姓名'],
+                'year'=>$year,
+                'month'=>$month,
+                'url'=>'http://cgz.marchsoft.cn/wx#/detail/'.$data['工号'].'/'.$year.'/'.$month.'/'.$cpyId
             ];
             $this->userInfo=json_encode(['code'=>$data['工号'],'name'=>$data['姓名']]);
             $jsonArr = [];
@@ -148,8 +156,9 @@ class PayController extends Controller
             $pay['type'] = $cpyId;
             $pay['flag'] = $flag;
             $payArr[] = $pay;
+            $postArr[] = $post;
         }
-        return $payArr;
+        return [$payArr,$postArr];
     }
 
     /**
@@ -245,6 +254,10 @@ class PayController extends Controller
         ];
     }
 
+    /**
+     * 模板下载
+     * @param Request $request
+     */
     public function downloadFile(Request $request){
         $downloadFileName = $request->downloadType==0?'第一批工资模板.xlsx':'第二批工资模板.xlsx';
         $file = storage_path().'/app/public/'.$downloadFileName;
@@ -259,29 +272,18 @@ class PayController extends Controller
         readfile($file);
     }
 
+    /**
+     * 模板推送
+     * @param $data
+     */
+    public function postInfo($data){
+        $client = new Client();
+        $response = $client->request('POST', 'http://hist.marchsoft.cn/vendor/salary/send_notify', [
+            'form_params' => [
+                'detail_list' => json_encode($data),
+            ]
+        ]);
 
-//    public function urlPost() {
-//        $url = "http://www.financial.cn/vendor/salary/send_notify";
-//        $post_data = ['_token'=>csrf_token(),'detail_list'=>json_encode(['code'=>2015001,'name'=>'王启航'])];
-//        $this->curlPost($url,$post_data);
-//    }
-//    function curlPost($url, $data=''){
-//        $curl = curl_init();
-//        curl_setopt($curl, CURLOPT_URL, $url);
-//        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 对认证证书来源的检查
-//        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // 从证书中检查SSL加密算法是否存在
-//        curl_setopt($curl, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']); // 模拟用户使用的浏览器
-//        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1); // 使用自动跳转
-//        curl_setopt($curl, CURLOPT_AUTOREFERER, 1);
-//        curl_setopt($curl, CURLOPT_POST, 1);
-//        if ($data != '')
-//            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-//        curl_setopt($curl, CURLOPT_TIMEOUT, 30); // 设置超时限制防止死循环
-//        curl_setopt($curl, CURLOPT_HEADER, 0);
-//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-//        $tmpInfo = curl_exec($curl);
-//        curl_close($curl);
-//        return $tmpInfo;
-//    }
+    }
 }
 
