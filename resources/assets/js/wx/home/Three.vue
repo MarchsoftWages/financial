@@ -122,7 +122,8 @@
                 this.getThree(value)
             },
             detail(job_num,month) {
-                this.$router.push({path:'/detail/'+job_num+'/'+month+'/'+this.stringValue})
+                let year = new Date().getFullYear()
+                this.$router.push({path:'/detail/'+job_num+'/'+year+'/'+month+'/'+this.stringValue})
             },
             getCurrent() {
                 this.$router.push({path:'/'+this.$route.params.job_num+'/'+this.$route.params.mobile})

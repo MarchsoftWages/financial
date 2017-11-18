@@ -4,14 +4,14 @@
             <x-header> {{ this.$route.params.type == 0 ? '第一批' : '第二批' }} 查询结果</x-header>
         </div>
         <div class="wages">
-            <group v-if="!more && list[0].type == 0" v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_month)">
+            <group v-if="!more && list[0].type == 0" v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_year,item.pay_month)">
                 <div class="list">
                     <span>工资实发额：</span>
                     <span class="gt-icon"><i>&gt;</i></span>
                     <span class="total"> {{ item.wages['工资实发额'] }} </span>
                 </div>
             </group>
-            <group v-if="!more && list[0].type == 1" v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_month)">
+            <group v-if="!more && list[0].type == 1" v-for="(item,index) in list" :key="index" :title="item.pay_year+'-'+item.pay_month" @click.native="detail(item.job_num,item.pay_year,item.pay_month)">
                 <div class="list">
                     <span>第二批工资：</span>
                     <span class="gt-icon"><i>&gt;</i></span>
@@ -97,6 +97,7 @@
                         for (let i in this.list){
                             this.list[i].wages = JSON.parse(this.list[i].wages)
                         }
+                        console.log(this.list)
                         this.more = false
                     }else {
                         this.more = true
@@ -104,8 +105,8 @@
                     this.$vux.loading.hide()
                 })
             },
-            detail(job_num,month) {
-                this.$router.push({path:'/detail/'+job_num+'/'+month+'/'+this.$route.params.type})
+            detail(job_num,year,month) {
+                this.$router.push({path:'/detail/'+job_num+'/'+year+'/'+month+'/'+this.$route.params.type})
             },
         },
         mounted() {

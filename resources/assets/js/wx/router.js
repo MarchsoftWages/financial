@@ -28,7 +28,7 @@ export default new VueRouter({
         },
         {
             name: "detail",
-            path: '/detail/:job_num/:month/:type',
+            path: '/detail/:job_num/:year/:month/:type',
             component: resolve =>void(require(['./home/Detail.vue'], resolve))
         },
         {

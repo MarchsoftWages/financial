@@ -12,9 +12,8 @@ class Query extends Model
      * @return int
      * @internal param int $type 0:第一批，1：第二批
      */
-    public static function get_current_wages($job_num, $month,$type)
+    public static function get_current_wages($job_num,$year, $month,$type)
     {
-        $year = date('Y',time());
         $result = DB::table('pay')->where(['job_num'=>$job_num,'pay_year'=>$year,'pay_month'=>$month,'status'=>0,'type'=>$type])->first();
         return $result ? $result : 0;
     }

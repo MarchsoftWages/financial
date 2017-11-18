@@ -3,8 +3,11 @@ namespace App\Http\Controllers\home;
 
 use App\Http\Controllers\Controller;
 use App\Models\Query;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
+use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class QueryController extends Controller
 {
@@ -20,6 +23,7 @@ class QueryController extends Controller
         $mobile = $request->mobile;
         $flag = $request->flag;
         $type = $request->type;
+        $year = date('Y',time());
         if($flag == 1){
             $month = date('m',time());
         }else {
@@ -28,7 +32,7 @@ class QueryController extends Controller
         if(strlen($month) == 1){
             $month = '0'.$month;
         }
-        $result = Query::get_current_wages($job_num, $month,$type);
+        $result = Query::get_current_wages($job_num,$year, $month,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
 
@@ -62,9 +66,10 @@ class QueryController extends Controller
     public function get_detail(Request $request)
     {
         $job_num = $request->job_num;
+        $year = $request->year;
         $month = $request->month;
         $type = $request->type;
-        $result = Query::get_current_wages($job_num, $month,$type);
+        $result = Query::get_current_wages($job_num,$year, $month,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
 
@@ -96,18 +101,31 @@ class QueryController extends Controller
     }
     public function test()
     {
-        /*$data = ['detail_list'=>json_encode(['code'=>'2015001','name'=>'wangqihang'])];
-        $result = curlGet('http://hist.marchsoft.cn/salary/send_notify','post',$data);
-        return $result;*/
-       /* $data = ['detail_list'=>json_encode(['code'=>'2015001','name'=>'wangqihang'])];
+        /*$data = "{'detail_list': json_encode(['code'=>'2015001','name'=>'wangqihang'])]}";
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://hist.marchsoft.cn/salary/send_notify');
+        curl_setopt($ch, CURLOPT_URL, 'http://hist.marchsoft.cn/vendor/salary/send_notify');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, ['detail_list' => $data]);
         $output = curl_exec($ch);
         curl_close($ch);
         return $output;*/
-       dump(storage_path());
+
+        $data = array();
+        $data1 = [
+            'code'=>'2015001',
+            'name'=>'wangqihang',
+            'year'=>'2017',
+            'month'=>'11',
+            'url'=>'http://cgz.marchsoft.cn/wx#/detail/2015001/11/0'
+        ];
+        array_push($data,$data1);
+        //$result = '[{"code":"2015001","name":"wangqihang","year":"2017","month":"11","url":"http:\/\/cgz.marchsoft.cn\/wx#\/detail\/2015001\/11\/0"}]';
+        $client = new Client();
+        $response = $client->request('POST', 'http://hist.marchsoft.cn/vendor/salary/send_notify', [
+            'form_params' => [
+                'detail_list' => json_encode($data),
+            ]
+        ]);
     }
 }
