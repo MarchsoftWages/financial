@@ -101,17 +101,7 @@ class QueryController extends Controller
     }
     public function test()
     {
-        /*$data = "{'detail_list': json_encode(['code'=>'2015001','name'=>'wangqihang'])]}";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://hist.marchsoft.cn/vendor/salary/send_notify');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, ['detail_list' => $data]);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        return $output;*/
-
-        $data = array();
+        /*$data = array();
         $data1 = [
             'code'=>'2015001',
             'name'=>'wangqihang',
@@ -126,6 +116,6 @@ class QueryController extends Controller
             'form_params' => [
                 'detail_list' => json_encode($data),
             ]
-        ]);
+        ]);*/
     }
 }
