@@ -259,7 +259,7 @@ class PayController extends Controller
      * @param Request $request
      */
     public function downloadFile(Request $request){
-        $downloadFileName = $request->downloadType==0?'第一批工资模板.xlsx':'第二批工资模板.xlsx';
+        $downloadFileName = $request->downloadType==0?'first.xlsx':'second.xlsx';
         $file = storage_path().'/app/public/'.$downloadFileName;
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
