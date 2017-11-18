@@ -23,6 +23,7 @@ class QueryController extends Controller
         $mobile = $request->mobile;
         $flag = $request->flag;
         $type = $request->type;
+        $year = date('Y',time());
         if($flag == 1){
             $month = date('m',time());
         }else {
@@ -31,7 +32,7 @@ class QueryController extends Controller
         if(strlen($month) == 1){
             $month = '0'.$month;
         }
-        $result = Query::get_current_wages($job_num, $month,$type);
+        $result = Query::get_current_wages($job_num,$year, $month,$type);
         return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
     }
 
