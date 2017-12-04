@@ -11,67 +11,6 @@ use Illuminate\Support\Facades\Log;
 
 class QueryController extends Controller
 {
-    /**
-     * 查询当前月和上个月的工资，1：当前月，2：上月,
-     * $type 0:第一批工资，1：第二批工资
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function get_current(Request $request)
-    {
-        $job_num = $request->job_num;
-        $mobile = $request->mobile;
-        $flag = $request->flag;
-        $type = $request->type;
-        $year = date('Y',time());
-        if($flag == 1){
-            $month = date('m',time());
-        }else {
-            $month = date('m',time()) - 1;
-        }
-        if(strlen($month) == 1){
-            $month = '0'.$month;
-        }
-        $result = Query::get_current_wages($job_num,$year, $month,$type);
-        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
-    }
-
-    /**
-     * $data 近三个月份
-     * 查询最近三个月的工资
-     */
-    public function get_three(Request $request)
-    {
-        $job_num = $request->job_num;
-        $mobile = $request->mobile;
-        $type = $request->type;
-        $month = $month = date('m',time());
-        $array = [$month,$month-1,$month-2];
-        foreach ($array as $key => $value){
-            if(strlen($value) == 1){
-                $data[] = '0'.$value;
-            }else {
-                $data[] = $value.'';
-            }
-        }
-        $result = Query::get_three($job_num,$data,$type);
-        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
-    }
-
-    /**
-     * 查询某个月工资详情
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function get_detail(Request $request)
-    {
-        $job_num = $request->job_num;
-        $year = $request->year;
-        $month = $request->month;
-        $type = $request->type;
-        $result = Query::get_current_wages($job_num,$year, $month,$type);
-        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
-    }
 
     /**
      * 获取全年的工资
@@ -81,24 +20,29 @@ class QueryController extends Controller
     public function get_year(Request $request)
     {
         $job_num = $request->job_num;
-        $month = $request->month;
-        $type = $request->type;
-        $result = Query::get_year_wages($job_num,$type);
-        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
+        $year = $request->year;
+        $result = Query::get_year_wages($job_num,$year);
+        if($result){
+            $data = array();
+            foreach ($result as $key => $info) {
+                if($info->type == 0){
+                    $data[$info->pay_month]['first'] = $info;
+                    $data[$info->pay_month]['showContent'] = false;
+                    $data[$info->pay_month]['showContent1'] = false;
+                    $data[$info->pay_month]['showContent2'] = false;
+                }else{
+                    $data[$info->pay_month]['second'] = $info;
+                    $data[$info->pay_month]['showContent'] = false;
+                }
+            }
+            //排序
+            sort($data);
+            return responseToJson(0,'success',$data);
+        }else{
+            return responseToJson(1,'error','没有查询结果');
+        }
     }
 
-    /**
-     * 自定义查询工资列表
-     */
-    public function get_query(Request $request)
-    {
-        $job_num = $request->job_num;
-        $start = strtotime($request->start);
-        $end = strtotime($request->end);
-        $type = $request->type;
-        $result = Query::get_query($job_num,$start,$end,$type);
-        return $result ? responseToJson(0,'success',$result) : responseToJson(1,'error','没有查询结果');
-    }
     public function test()
     {
         /*$data = array();

@@ -6,6 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 class Query extends Model
 {
     /**
+     * 获取全年的工资列表
+     * @param $job_num  工号
+     * @param $year 年份
+     * @return int
+     */
+    public static function get_year_wages($job_num,$year)
+    {
+        $result = DB::table('pay')
+            ->where(['job_num'=>$job_num,'pay_year'=>$year,'status'=>0])
+            ->orderBy('wages_date','desc')
+            ->get();
+        return !$result->isEmpty() ? $result : 0;
+    }
+
+
+
+    /**
      * wx端查询当月的工资
      * @param $job_num  工号
      * @param $month    月份
@@ -30,21 +47,6 @@ class Query extends Model
         $result = DB::table('pay')
             ->where(['job_num'=>$job_num,'pay_year'=>$year,'status'=>0,'type'=>$type])
             ->whereIn('pay_month',$month)
-            ->orderBy('wages_date','desc')
-            ->get();
-        return !$result->isEmpty() ? $result : 0;
-    }
-
-    /**
-     * 获取全年的工资列表
-     * @param $job_num  工号
-     * @return int
-     */
-    public static function get_year_wages($job_num,$type)
-    {
-        $year = date('Y',time());
-        $result = DB::table('pay')
-            ->where(['job_num'=>$job_num,'pay_year'=>$year,'status'=>0,'type'=>$type])
             ->orderBy('wages_date','desc')
             ->get();
         return !$result->isEmpty() ? $result : 0;

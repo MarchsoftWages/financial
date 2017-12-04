@@ -33,7 +33,6 @@
     </div>
 </template>
 <style>
-
     .el-upload-dragger{
         height: 300px;
     }

@@ -137,6 +137,7 @@ class PayController extends Controller
                 'year'=>$year,
                 'month'=>$month,
                 'url'=>getenv('TEMPLATE_URL').$data['工号'].'/'.$year
+
             ];
             $this->userInfo=json_encode(['code'=>$data['工号'],'name'=>$data['姓名']]);
             $jsonArr = [];
