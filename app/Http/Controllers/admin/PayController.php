@@ -142,7 +142,7 @@ class PayController extends Controller
                 'name'=>$data['姓名'],
                 'year'=>$year,
                 'month'=>$month,
-                'url'=>'http://cgz.marchsoft.cn/wx#/detail/'.$data['工号'].'/'.$year.'/'.$month.'/'.$cpyId
+                'url'=>'http://cgz.wangqihang.net/wx#/detail/'.$data['工号'].'/'.$year.'/'.$month.'/'.$cpyId
             ];
             $this->userInfo=json_encode(['code'=>$data['工号'],'name'=>$data['姓名']]);
             $jsonArr = [];
@@ -278,7 +278,7 @@ class PayController extends Controller
      */
     public function postInfo($data){
         $client = new Client();
-        $response = $client->request('POST', 'http://hist.marchsoft.cn/vendor/salary/send_notify', [
+        $response = $client->request('POST', 'http://notification.duanyingkui.com/vendor/salary/send_notify', [
             'form_params' => [
                 'detail_list' => json_encode($data),
             ]
