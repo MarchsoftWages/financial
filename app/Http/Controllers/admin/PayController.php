@@ -12,14 +12,7 @@ use Maatwebsite\Excel\Facades\Excel;
 class PayController extends Controller
 {
     private $userInfo ='';
-    /**
-     * 设定中国时间
-     * PayController constructor.
-     */
-    public function __construct(){
-        date_default_timezone_set('PRC');
-    }
-
+    private $openProgress = false;
     /**
      * 保存上传文件
      * @param Request $request
@@ -38,6 +31,7 @@ class PayController extends Controller
             $bool = Storage::disk('uploads')->put($fileInfo['fileRealName'].'.'.$fileInfo['filExtension'],file_get_contents($fileInfo['fileRealpath']));
             if ($bool){
                 $excel = $this->readExcel($fileInfo['fileRealName'],$fileInfo['filExtension']);
+                $this->openProgress = true;
                 $payArr = $this->getPayArray($excel,$cpyId,$flag);
                 $payOtherArr = $this->getPayOtherArr($excel,$flag);
                 $logArr = $this->getLogArr([$fileInfo['fileName'],$fileInfo['fileRealName']],$flag,$cpyId);
@@ -142,7 +136,7 @@ class PayController extends Controller
                 'name'=>$data['姓名'],
                 'year'=>$year,
                 'month'=>$month,
-                'url'=>'http://cgz.marchsoft.cn/wx#/detail/'.$data['工号'].'/'.$year.'/'.$month.'/'.$cpyId
+                'url'=>getenv('TEMPLATE_URL').$data['工号'].'/'.$year
             ];
             $this->userInfo=json_encode(['code'=>$data['工号'],'name'=>$data['姓名']]);
             $jsonArr = [];
@@ -278,7 +272,7 @@ class PayController extends Controller
      */
     public function postInfo($data){
         $client = new Client();
-        $response = $client->request('POST', 'http://hist.marchsoft.cn/vendor/salary/send_notify', [
+        $response = $client->request('POST', getenv('SEND_URL'), [
             'form_params' => [
                 'detail_list' => json_encode($data),
             ]
