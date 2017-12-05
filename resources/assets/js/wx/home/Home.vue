@@ -299,6 +299,7 @@
                         this.except = 0
                         this.data_list = []
                     }
+                    this.$vux.loading.hide()
                 })
             },
             selectChange(value) {
