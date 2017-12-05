@@ -8,13 +8,14 @@
                        :on-error="uploadError"
                        :on-success="uploadSuccess"
                        :before-upload="beforeAvatarUpload">
-                <div class="el-upload__text"><h2 style="color:black;">第一批次工资报表上传</h2></div>
+                <div class="el-upload__text"><h2 style="color:black;">正常工资导入</h2></div>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过2mb</div>
             </el-upload>
-            <a class="download first-file">第一批工资模板</a>
+            <span class="download-span"><a class="download-a first-file">正常工资模板</a></span>
         </div>
+        
         <div @click="setCpyid(1)">
             <el-upload class="upload-demo" drag :show-file-list="false"
                        :action="importFileUrl"
@@ -23,12 +24,12 @@
                        :on-error="uploadError"
                        :on-success="uploadSuccess"
                        :before-upload="beforeAvatarUpload">
-                <div class="el-upload__text"><h2 style="color:black;">第二批次工资报表上传</h2></div>
+                <div class="el-upload__text"><h2 style="color:black;">特殊发放导入</h2></div>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                 <div class="el-upload__tip" slot="tip">只能上传xlsx/xls文件，且不超过2mb</div>
             </el-upload>
-            <a class="download second-file">第二批工资模板</a>
+            <span class="download-span"><a class="download-a second-file">特殊发放模板</a></span>
         </div>
     </div>
 </template>
@@ -41,12 +42,14 @@
         line-height: 180px;
         margin: 0 0 16px;
     }
-    .download{
-        color: #bdabab;
+    .download-span{
         display: flex;
-        font-size: 10px;
         justify-content: center;
         margin-top: 20px;
+    }
+    .download-a{
+        color: #bdabab;
+        font-size: 10px;
         text-decoration: none;
     }
 </style>
@@ -63,7 +66,8 @@
                 headers:{
                     'X-CSRF-TOKEN':document.head.querySelector('meta[name="X-CSRF-TOKEN"]').content
                 },
-                loadingInstance:''   //loading
+                loadingInstance:'',   //loading
+                progressCount:''
             }
         },
         computed: {
@@ -100,9 +104,9 @@
              * @returns {boolean}
              */
             beforeAvatarUpload (file) {
-                const extension = file.name.split('.')[1] === 'xls'
-                const extension2 = file.name.split('.')[1] === 'xlsx'
-                const isLt2M = file.size / 1024 / 1024 < 2
+                const extension = file.name.split('.')[1] === 'xls';
+                const extension2 = file.name.split('.')[1] === 'xlsx';
+                const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!extension && !extension2) {
                     this.$message({message: '上传模板只能是 xls、xlsx 格式!',type: 'warning'});
                 }

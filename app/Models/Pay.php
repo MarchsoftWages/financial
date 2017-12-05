@@ -182,4 +182,12 @@ class Pay extends Model
         }
     }
 
+    /**
+     * 返回数据条数
+     * @return int
+     */
+    public static function countData(){
+        return DB::table('pay')->count();
+    }
+
 }

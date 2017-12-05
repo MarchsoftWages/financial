@@ -225,14 +225,20 @@
                     type: 'info'
                 }).then(() => {
                     this_.loadingInstance = Loading.service({ fullscreen: true });
-                    axios.post('/admin/delete',{flag:row.mark}).then(function (response) {
+                    axios.post('/admin/delete', {
+                        flag:row.mark
+                    }).then(function (response) {
                         this_.loadingInstance.close();
-                        this_.getData('/getlogs?page='+this_.pageData.current_page+'&type='+this.radio,0);
+                        this_.getData('/getlogs?page='+this_.pageData.current_page+'&type='+this_.radio,0);
                         if(response.data.code==3)
                             this_.$message.error(response.data.result);
-                        else
+                        else{
                             this_.$message({type: 'success', message: response.data.result});
-                    }).catch(function (response) {console.log(response.data);});
+                        }
+                    }).catch(function (response) {
+                        this_.loadingInstance.close();
+                        console.log(response.data);
+                    });
 
                 }).catch(() => {
                     this.$message({type: 'info', message: '已取消删除'});
@@ -248,6 +254,7 @@
                 this.changeSearch = type;
                 axios.get(url)
                 .then(function (response) {
+
                     this_.loadingInstance.close();
                     if (response.data.code==0){
                         if(type==0)
@@ -314,8 +321,7 @@
              */
             getRadio(){
                 if(this.radio!=this.oldRadio){
-                    this.loadingInstance = Loading.service({ fullscreen: true });
-                    this.getData('/getlogs?page=1&type='+this.radio,0);
+                    this.searchLog();
                 }
                 this.oldRadio=this.radio;
 
