@@ -3,6 +3,7 @@
         <div class="head">
             <x-header>工资查询</x-header>
             <div class="button-tab">
+                <i class="self-icon">&lt;</i>
                 <scroller lock-y :scrollbar-x=false>
                     <div class="box">
                         <checker v-model="demo1Required" @on-change="selectChange" radio-required default-item-class="demo1-item" selected-item-class="demo1-item-selected">
@@ -84,6 +85,14 @@
     .test .weui-cell{
         padding: 10px 15px 10px 40px;
     }
+    .wages-list .weui-input{
+        color: #eea729;
+    }
+    .demo1-item-selected{
+        border-color: #ff4a00;
+        background-color: #fee4d5!important;
+        color: #ff5001;
+    }
 </style>
 <style scoped>
     .head{
@@ -94,10 +103,18 @@
         overflow: hidden;
     }
     .button-tab{
+        position: relative;
         margin-top: 100px;
-        width: 90%;
+        width: 85%;
         margin: 0 auto;
         margin-top: 13px;
+    }
+    .self-icon{
+        position: absolute;
+        left: -23px;
+        top: -9px;
+        font-size: 2rem;
+        color: #ff4a00;
     }
     .button-tab a{
         text-decoration: none;
@@ -107,7 +124,7 @@
     }
     .demo1-item {
         width: 100px;
-        height: 26px;
+        height: 28px;
         line-height: 26px;
         text-align: center;
         border-radius: 3px;
@@ -149,15 +166,18 @@
         border:1px solid #e3e3e3;
         overflow: hidden;
         text-align: center;
+        color: #eea729;
     }
     .total-title{
         margin-top: 30px;
         font-size: 30px;
         display: inline-block;
+        color: #eea729;
     }
     .should-title{
         font-size: 24px;
         display: inline-block;
+        color: #eea729;
     }
     .title-font{
         color: #666;
