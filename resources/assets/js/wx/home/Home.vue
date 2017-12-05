@@ -25,7 +25,7 @@
                     </div>
                     <div class="year-except">
                         <span class="should-title"> {{ except }} </span><br>
-                        <span class="title-font">全年扣发合计(中):</span>
+                        <span class="title-font">全年扣发合计(总):</span>
                     </div>
                 </div>
                 <div class="content">
@@ -43,7 +43,7 @@
                                     <cell-form-preview :border-intent="false" :list="item['first'].list"></cell-form-preview>
                                 </template>
                                 <cell
-                                    :title="'扣发合计：'+item['first'].wages['工资实发额']"
+                                    :title="'扣发合计：'+item['first'].wages['扣发合计']"
                                     is-link
                                     :border-intent="false"
                                     :arrow-direction="item.showContent1 ? 'up' : 'down'"
@@ -208,7 +208,9 @@
                         let year_should = 0
                         let year_except = 0
                         for(let i in data){
-                            data[i]['first'].wages = JSON.parse(data[i]['first'].wages)
+                            if(data[i]['first'] != undefined) {
+                                data[i]['first'].wages = JSON.parse(data[i]['first'].wages)
+                            }
                             if(data[i]['second'] != undefined){
                                 data[i]['second'].wages = JSON.parse(data[i]['second'].wages)
                             }
@@ -225,6 +227,7 @@
                             data[i]['first'].list.push({label:'保留福补',value: data[i]['first'].wages['保留福补']})
                             data[i]['first'].list.push({label:'基础绩效',value: data[i]['first'].wages['基础绩效']})
                             data[i]['first'].list.push({label:'预增发',value: data[i]['first'].wages['预增发']})
+                            data[i]['first'].list.push({label:'奖励绩效',value: data[i]['first'].wages['奖励绩效']})
                             data[i]['first'].list.push({label:'离退休费',value: data[i]['first'].wages['离退休费']})
                             data[i]['first'].list.push({label:'历次增离退休费',value: data[i]['first'].wages['历次增离退休费']})
                             data[i]['first'].list.push({label:'生活补贴',value: data[i]['first'].wages['生活补贴']})
@@ -290,14 +293,12 @@
                         this.should = year_should
                         this.except = year_except
                         this.data_list = data
-                        console.log(this.data_list)
                     }else{
                         this.total = 0
                         this.should = 0
                         this.except = 0
                         this.data_list = []
                     }
-                    this.$vux.loading.hide()
                 })
             },
             selectChange(value) {
