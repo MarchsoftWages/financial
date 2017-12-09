@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="head">
-            <x-header>工资查询</x-header>
+            <x-header>工资查询
+                <a style="text-decoration: none" slot="right" href='#/job_fb'>反馈</a>
+            </x-header>
             <div class="button-tab">
                 <scroller lock-y :scrollbar-x=false>
                     <div class="box">
@@ -116,7 +118,7 @@
         margin-right: 6px;
     }
     .demo1-item-selected {
-        background: #ffffff url('/img/wx/bg.png') no-repeat right bottom;
+        background: #ffffff url('../../../img/wx/bg.png') no-repeat right bottom;
         border-color: #ff4a00;
     }
     .box {
