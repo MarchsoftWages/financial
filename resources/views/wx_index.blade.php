@@ -19,6 +19,7 @@
 
 </div>
 </body>
+<script src="{{ asset('js/unit/mobile-detect.min.js') }}"></script>
 <script src="{{ mix('js/manifest.js') }}"></script>
 <script src="{{ mix('js/vendor.js') }}"></script>
 <script src="{{ mix('js/wx.js') }}"></script>

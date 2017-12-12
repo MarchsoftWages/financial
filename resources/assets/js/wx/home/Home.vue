@@ -2,7 +2,7 @@
     <div>
         <div class="head">
             <x-header>工资查询
-                <a style="text-decoration: none" slot="right" href='#/job_fb'>反馈</a>
+                <a style="text-decoration: none" slot="right" @click="feedUrl">反馈</a>
             </x-header>
             <div class="button-tab">
                 <scroller lock-y :scrollbar-x=false>
@@ -292,7 +292,6 @@
                         this.should = year_should
                         this.except = year_except
                         this.data_list = data
-                        console.log(this.data_list)
                     }else{
                         this.total = 0
                         this.should = 0
@@ -306,10 +305,19 @@
                 this.demo1Required = value
                 this.get_year()
             },
+            feedUrl(){
+                let vm = this;
+                vm.$router.push({
+                    path: '/job_fb',
+                    query: {
+                        jobNumber:vm.$route.params.job_num
+                    }
+                });
+            }
         },
         mounted() {
-            this.get_year()
-            $('.box').css('width',(this.end - this.start + 1)*110 + 'px')
+            this.get_year();
+            $('.box').css('width',(this.end - this.start + 1)*110 + 'px');
         },
     }
 </script>

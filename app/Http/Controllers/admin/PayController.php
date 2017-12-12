@@ -248,7 +248,6 @@ class PayController extends Controller
             'filExtension'=>$ext
         ];
     }
-
     /**
      * 模板下载
      * @param Request $request
