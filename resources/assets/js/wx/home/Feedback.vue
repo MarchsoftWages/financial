@@ -55,9 +55,6 @@
         margin-top: 1.71em;
         width: 90%;
     }
-    .vux-x-textarea{
-        padding: 0;
-    }
     .weui-cells{
         margin: 0;
     }

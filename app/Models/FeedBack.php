@@ -9,7 +9,14 @@
 namespace App\Models;
 
 
+use Illuminate\Support\Facades\DB;
+
 class FeedBack
 {
-
+    public static function saveFB($fbArr){
+        if(DB::table('feed_back')->insert($fbArr))
+            return 1;                  //插入成功
+        else
+            return 0;                  //插入失败
+    }
 }

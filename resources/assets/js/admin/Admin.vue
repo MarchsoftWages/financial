@@ -166,6 +166,11 @@
                         className:'el-icon-date'
                     },
                     {
+                        url:'/fb',
+                        name:"意见反馈",
+                        className:'el-icon-message'
+                    },
+                    {
                         url:'/change',
                         name:"修改密码",
                         className:'el-icon-setting'

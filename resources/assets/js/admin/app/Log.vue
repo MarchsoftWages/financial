@@ -35,6 +35,7 @@
             <el-button type="primary" icon="search" @click="searchLog">搜索</el-button>
         </el-breadcrumb>
         <el-table
+            height="460"
             :data="changeSearch==0?pageData.data:search"
             border
             style="width: 100%"
