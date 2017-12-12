@@ -5,6 +5,7 @@
                 <a style="text-decoration: none" slot="right" @click="feedUrl">反馈</a>
             </x-header>
             <div class="button-tab">
+                <i class="self-icon">&lt;</i>
                 <scroller lock-y :scrollbar-x=false>
                     <div class="box">
                         <checker v-model="demo1Required" @on-change="selectChange" radio-required default-item-class="demo1-item" selected-item-class="demo1-item-selected">
@@ -27,7 +28,7 @@
                     </div>
                     <div class="year-except">
                         <span class="should-title"> {{ except }} </span><br>
-                        <span class="title-font">全年扣发合计(中):</span>
+                        <span class="title-font">全年扣发合计(总):</span>
                     </div>
                 </div>
                 <div class="content">
@@ -45,7 +46,7 @@
                                     <cell-form-preview :border-intent="false" :list="item['first'].list"></cell-form-preview>
                                 </template>
                                 <cell
-                                    :title="'扣发合计：'+item['first'].wages['工资实发额']"
+                                    :title="'扣发合计：'+item['first'].wages['扣发合计']"
                                     is-link
                                     :border-intent="false"
                                     :arrow-direction="item.showContent1 ? 'up' : 'down'"
@@ -86,6 +87,14 @@
     .test .weui-cell{
         padding: 10px 15px 10px 40px;
     }
+    .wages-list .weui-input{
+        color: #eea729;
+    }
+    .demo1-item-selected{
+        border-color: #ff4a00;
+        background-color: #fee4d5!important;
+        color: #ff5001;
+    }
 </style>
 <style scoped>
     .head{
@@ -96,10 +105,18 @@
         overflow: hidden;
     }
     .button-tab{
+        position: relative;
         margin-top: 100px;
-        width: 90%;
+        width: 85%;
         margin: 0 auto;
         margin-top: 13px;
+    }
+    .self-icon{
+        position: absolute;
+        left: -23px;
+        top: -9px;
+        font-size: 2rem;
+        color: #ff4a00;
     }
     .button-tab a{
         text-decoration: none;
@@ -109,7 +126,7 @@
     }
     .demo1-item {
         width: 100px;
-        height: 26px;
+        height: 28px;
         line-height: 26px;
         text-align: center;
         border-radius: 3px;
@@ -151,15 +168,18 @@
         border:1px solid #e3e3e3;
         overflow: hidden;
         text-align: center;
+        color: #eea729;
     }
     .total-title{
         margin-top: 30px;
         font-size: 30px;
         display: inline-block;
+        color: #eea729;
     }
     .should-title{
         font-size: 24px;
         display: inline-block;
+        color: #eea729;
     }
     .title-font{
         color: #666;
@@ -210,7 +230,9 @@
                         let year_should = 0
                         let year_except = 0
                         for(let i in data){
-                            data[i]['first'].wages = JSON.parse(data[i]['first'].wages)
+                            if(data[i]['first'] != undefined) {
+                                data[i]['first'].wages = JSON.parse(data[i]['first'].wages)
+                            }
                             if(data[i]['second'] != undefined){
                                 data[i]['second'].wages = JSON.parse(data[i]['second'].wages)
                             }
@@ -227,6 +249,7 @@
                             data[i]['first'].list.push({label:'保留福补',value: data[i]['first'].wages['保留福补']})
                             data[i]['first'].list.push({label:'基础绩效',value: data[i]['first'].wages['基础绩效']})
                             data[i]['first'].list.push({label:'预增发',value: data[i]['first'].wages['预增发']})
+                            data[i]['first'].list.push({label:'奖励绩效',value: data[i]['first'].wages['奖励绩效']})
                             data[i]['first'].list.push({label:'离退休费',value: data[i]['first'].wages['离退休费']})
                             data[i]['first'].list.push({label:'历次增离退休费',value: data[i]['first'].wages['历次增离退休费']})
                             data[i]['first'].list.push({label:'生活补贴',value: data[i]['first'].wages['生活补贴']})

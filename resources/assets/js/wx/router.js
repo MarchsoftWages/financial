@@ -8,7 +8,7 @@ export default new VueRouter({
         //微信路由模块
         {
             name: "wx_home",
-            path: '/:job_num/:mobile',
+            path: '/:job_num/:month',
             component: resolve =>void(require(['./home/Home.vue'], resolve))
         },
         {
