@@ -24,7 +24,7 @@
                     :arrow-direction="showContent ? 'up' : 'down'"
                     @click.native="showContent = !showContent"></cell>
                 <template v-if="showContent" v-for="option  in opTions">
-                    <cell-box :border-intent="false" class="sub-item" @click.native="valOption=option;showContent=false">{{option}}</cell-box>
+                    <cell-box :border-intent="false" class="sub-item" @click.native="qu_type=option;showContent=false">{{option}}</cell-box>
                 </template>
             </group>
             <group>
@@ -105,7 +105,7 @@
                 isShow:true,
                 showContent: false,
                 opTions:[
-                    '查不出工资',
+                    '工资加载不出来',
                     '页面卡顿',
                     '工资显示错误'
                 ],
@@ -168,7 +168,7 @@
                         model = sss[i].substring(0, sss[i].indexOf("Build/"));
                     }
                 }
-                return [os,model];
+                return os+"|"+model;
             },
             imgPreview (file,e) {
                 let self = this;
@@ -217,7 +217,16 @@
                     img_path:vm.imgUrls
                 })
                 .then(function (response) {
-                    console.log(response.data);
+                    if(response.data.code==0){
+                        vm.$vux.toast.show({
+                            text: response.data.result,
+                            onHide () {
+                                vm.$router.push({path: '/'+vm.$route.query.jobNumber+'/'+vm.$route.query.jobYear});
+                            }
+                        })
+                    }else {
+                        vm.$vux.toast.test(response.data.result);
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);

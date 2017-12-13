@@ -333,7 +333,8 @@
                 vm.$router.push({
                     path: '/job_fb',
                     query: {
-                        jobNumber:vm.$route.params.job_num
+                        jobNumber:vm.$route.params.job_num,
+                        jobYear:this.demo1Required
                     }
                 });
             }

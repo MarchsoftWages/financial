@@ -31,12 +31,26 @@ class FBController
                 }
             }
         }
-        $feedArr['phone_model'] = json_encode($feedArr['phone_model']);
         $feedArr['img_path'] = json_encode($nameArr);
         if(FeedBack::saveFB($feedArr))
             return responseToJson('0',"success","问题提交成功");
         else
             return responseToJson('1',"failed","问题提交失败");;
+
+    }
+
+    public function selectFb(Request $request){
+        $size = $request->size;
+        $dataFb = FeedBack::getFb($size);
+        return $dataFb?responseToJson(0,"success",$dataFb):responseToJson(1,"failed","无查询数据");
+    }
+
+    public function selConfb(Request $request){
+        $size = $request->size;
+        $input = $request->input;
+        $value = $request->value;
+        $setData = FeedBack::setConfb($size,$input,$value);
+        return $setData?responseToJson(0,"success",$setData):responseToJson(1,"failed","无查询数据");
 
     }
 }
