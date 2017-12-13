@@ -3,9 +3,9 @@
         <div class="head">
             <x-header :left-options="{showBack: false}">工资查询</x-header>
             <div class="button-tab">
-                <i class="self-icon">&lt;</i>
+                <i class="self-icon" @click="leftChange">&lt;</i>
                 <scroller lock-y :scrollbar-x=false>
-                    <div class="box" id="test" >
+                    <div class="box" id="test1" >
                         <checker v-model="demo1Required" @on-change="selectChange" radio-required default-item-class="demo1-item" selected-item-class="demo1-item-selected">
                             <span  v-for="i in end-start+1">
                                 <checker-item :value="start + i - 1"> {{ start + i -1 }} </checker-item>
@@ -230,7 +230,7 @@
                     job_num:this.$route.params.job_num,
                     year: this.demo1Required
                 }).then( res => {
-                    document.getElementById('test').style.transform = 'translate(-'+(this.end - this.start + 1 - 3)*110+'px, 0)';
+                    document.getElementById('test1').style.transform = 'translate(-'+(this.end - this.start + 1 - 3)*110+'px, 0)';
                     if(res.data.code == 0){
                         let data = res.data.result
                         let year_total = 0
@@ -303,7 +303,7 @@
                                 data[i]['second'].list.push({label:'健康休养费',value:data[i]['second'].wages['健康休养费']})
                                 data[i]['second'].list.push({label:'暖气补',value:data[i]['second'].wages['暖气补']})
                                 data[i]['second'].list.push({label:'绩效补发',value:data[i]['second'].wages['绩效补发']})
-                                data[i]['second'].wages['合计'] = this.this.toDecimal(data[i]['second'].wages['教学奖励']+data[i]['second'].wages['科研奖励']+
+                                data[i]['second'].wages['合计'] = this.toDecimal(data[i]['second'].wages['教学奖励']+data[i]['second'].wages['科研奖励']+
                                                                     data[i]['second'].wages['岗位津贴慰问金']+data[i]['second'].wages['补生活补贴']+
                                                                     data[i]['second'].wages['薪级补发']+data[i]['second'].wages['补发文明奖']+
                                                                     data[i]['second'].wages['发13年暖气补']+data[i]['second'].wages['补发住房补贴']+
@@ -342,6 +342,9 @@
                 }
                 f = Math.round(x*100)/100;
                 return f;
+            },
+            leftChange() {
+                document.getElementById('test1').style.transform = 'translateX(0px)';
             },
             //点击应发合计展开的锚点链接
             clickShould(item,el) {
