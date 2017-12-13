@@ -36,7 +36,7 @@ class QueryController extends Controller
                 }
             }
             //排序
-            sort($data);
+            rsort($data);
             return responseToJson(0,'success',$data);
         }else{
             return responseToJson(1,'error','没有查询结果');
