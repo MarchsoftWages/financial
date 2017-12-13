@@ -24,7 +24,7 @@
                 </ul>
                 <ul class="text">
                     <li>
-                        <span class="text-item">系统|手机型号：</span>
+                        <span class="text-item">手机型号：</span>
                         <span>{{infoArr['phone_model']?infoArr['phone_model']:'无'}}</span>
                     </li>
                     <li>
@@ -40,16 +40,15 @@
                         {{infoArr['qu_detail']?infoArr['qu_detail']:'无'}}
                     </div>
                 </el-card>
+                <div v-if="img?true:false">
+                    <el-card class="box-card img-card" >
+                        <template v-for="i in img">
+                            <img :src="getImg(i)" class="image" @click="clickImg($event)">
+                            <big-img v-if="showImg" @clickit="viewImg" :imgSrc="imgSrc"></big-img>
+                        </template>
+                    </el-card>
+                </div>
             </el-card>
-            <el-row v-if="img?true:false">
-                <template v-for="i in img">
-                    <el-col :span="8" >
-                        <el-card :body-style="{ padding: '0px' }">
-                            <img :src="'/../storage/app/images/'+i" class="image">
-                        </el-card>
-                    </el-col>
-                </template>
-            </el-row>
         </div>
     </div>
 </template>
@@ -88,27 +87,59 @@
     .clearfix:after {
         clear: both
     }
+    .image {
+        width: 150px;
+        margin: 0 10px;
+    }
     .box-card {
         width: 782px;
     }
     .item-card{
-        margin: 30px 0;
+        margin: 20px 0;
         width: 741px;
-        min-height: 230px;
+        min-height: 215px;
+    }
+    .img-card{
+        width: 741px;
     }
 </style>
 <script>
+    import BigImg from './BigImg.vue';
     export default{
+        components: {
+            'big-img':BigImg
+        },
         data(){
             return {
                 infoArr:[],
                 img:[],
+                showImg:false,
+                imgSrc: ''
             }
         },
         methods: {
             backFb(){
                 this.$router.push({path: '/fb'});
-            }
+            },
+            getImg(img){
+                let path;
+                $.ajax({
+                    url: '/getimg/'+img,
+                    async: false,
+                    success : function(data){
+                        path = data;
+                    }
+                });
+                return path;
+            },
+            clickImg(e) {
+                this.showImg = true;
+                // 获取当前图片地址
+                this.imgSrc = e.currentTarget.src;
+            },
+            viewImg(){
+                this.showImg = false;
+            },
         },
         mounted() {
             this.infoArr=JSON.parse(this.$route.query.read_info);

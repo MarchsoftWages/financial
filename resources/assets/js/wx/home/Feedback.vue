@@ -168,7 +168,7 @@
                         model = sss[i].substring(0, sss[i].indexOf("Build/"));
                     }
                 }
-                return os+"|"+model;
+                return model;
             },
             imgPreview (file,e) {
                 let self = this;

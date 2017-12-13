@@ -8,7 +8,16 @@
                         :value="item.value">
                 </el-option>
             </el-select>
-            <el-input v-model="input" placeholder="请输入工号|手机号|姓名"></el-input>
+            <el-date-picker
+                    v-model="timeData"
+                    type="datetime"
+                    @change="dateChange"
+                    :picker-options="pickerBeginDateBefore"
+                    placeholder="选择日期时间">
+            </el-date-picker>
+            <div class="serach">
+                <el-input v-model="input" placeholder="请输入工号|手机号|姓名"></el-input>
+            </div>
             <el-button type="primary" icon="search" @click="searchFb">搜索</el-button>
         </el-breadcrumb>
         <el-table
@@ -16,44 +25,52 @@
                 :data="processData()"
                 border
                 style="width: 100%"
-                :default-sort = "{prop: 'id', order: 'descending'}">
+                :default-sort = "{prop: 'submit_time', order: 'descending'}">
             <el-table-column
                     prop="job_num"
                     label="工号"
-                    width="100">
+                    width="90">
             </el-table-column>
             <el-table-column
                     prop="name"
                     label="姓名"
-                    width="140">
+                    width="110">
             </el-table-column>
             <el-table-column
                     prop="phone"
                     label="电话"
-                    width="140">
+                    width="130">
             </el-table-column>
             <el-table-column
                     prop="phone_model"
-                    label="系统|手机型号"
-                    width="200">
+                    label="手机型号"
+                    >
             </el-table-column>
             <el-table-column
                     prop="qu_type"
                     label="问题类型"
-                    width="160">
+                    width="140">
             </el-table-column>
             <el-table-column
                     prop="qu_detail"
                     label="问题详情"
-                    width="200">
+                    >
             </el-table-column>
-            <el-table-column label="操作" >
+            <el-table-column
+                    prop="submit_time"
+                    label="上传时间"
+                    :formatter="judgeDate"
+                    width="185">
+            </el-table-column>
+            <el-table-column
+                    label="操作"
+                    width="140" >
                 <template slot-scope="scope" v-if="scope.row.id!=''">
                     <el-button
-                            :plain="true"
+                            :plain="scope.row.is_look==1?false:true"
                             size="small"
                             type="info"
-                            @click="handleRead(scope.row.id)">详情
+                            @click="handleRead(scope.row.id,scope.row.is_look)">{{scope.row.is_look==1?'已看':'详情'}}
                     </el-button>
                     <el-button
                             type="danger"
@@ -88,12 +105,11 @@
         justify-content: center;
         padding: 15px 0;
     }
-    .el-input {
+    .serach .el-input {
         width: 333px;
         margin: 0 10px;
     }
-    .el-select .el-input {
-        width: 180px;
+    .el-select {
         margin: 0 10px;
     }
     .pagination{
@@ -121,7 +137,9 @@
                             phone_model:'',
                             qu_type:'',
                             qu_detail:'',
-                            img_path:''
+                            submit_time:'',
+                            img_path:'',
+                            is_look:'',
                         }
                     ]
                 },
@@ -129,6 +147,7 @@
                 size:5,
                 input:'',
                 value:'',
+                timeData:'',
                 options:[{
                     key: 1,
                     value: '页面卡顿'
@@ -143,6 +162,11 @@
                     value: '工资显示错误'
                 }],
                 read_det:{},
+                pickerBeginDateBefore:{
+                    disabledDate: (time) => {
+                        return time.getTime() > Date.now();
+                    }
+                },
             }
         },
         methods: {
@@ -160,6 +184,15 @@
             handleSizeChange(size){
                 this.size = size;
                 this.getFbdata('/getFbinfo?page='+this.pageData.current_page+'&size='+this.size);
+            },
+            judgeDate(data){
+                return  new Date(parseInt(data.submit_time) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+            },
+            dateChange(val){
+                if(typeof(val)!="undefined"){
+                    this.timeData = val;
+                }
+                this.searchFb();
             },
             /**
              * 数据请求方法
@@ -187,7 +220,7 @@
                     let arr = [];
                     for(let key in data[index]) {
                         if (key == "qu_detail"&&data[index][key]!=null)
-                            arr[key] = this.suBstr(data[index][key],16);
+                            arr[key] = this.suBstr(data[index][key],14);
                         else
                             arr[key] = data[index][key];
                     }
@@ -200,13 +233,13 @@
              */
             searchFb(){
                 this.loading = Loading.service({ fullscreen: true });
-                if(this.input!=""||this.value!=""){
-                    this.getFbdata('/searFbinfo?size='+this.size+'&page=1&input='+this.input+'&value='+this.value);
+                if(this.input!=""||this.value!=""||this.timeData!=""){
+                    this.getFbdata('/searFbinfo?size='+this.size+'&page=1&input='+this.input+'&value='+this.value+'&timeData='+this.timeData);
                 }else {
                     this.getFbdata('/getFbinfo?size='+this.size+'&page='+this.pageData.current_page);
                 }
             },
-            handleRead(id){
+            handleRead(id,isLook){
                 let vm = this;
                 let data = vm.pageData.data;
                 for(let index in data) {
@@ -216,6 +249,21 @@
                         }
                         break;
                     }
+                }
+                if(!isLook){
+                    axios.post('/update_type', {
+                        id:id,
+                        type: {is_look:1}
+                    })
+                    .then(function (response) {
+                        if(response.data.code == 1){
+                            this.$message({message: '页面打不开',type: 'warning'});
+                            return;
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
                 }
                 vm.$router.push({
                     path: '/fb/fb_read',

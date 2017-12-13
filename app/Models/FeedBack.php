@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class FeedBack
 {
-    public static function saveFB($fbArr){
+    public static function saveFb($fbArr){
         if(DB::table('feed_back')->insert($fbArr))
             return 1;                  //插入成功
         else
@@ -25,18 +25,29 @@ class FeedBack
      * @return mixed
      */
     public static function getFb($size=5){
-        $datas = DB::table('feed_back')->orderBy('id','desc')
-            ->select('id','job_num','name','phone','phone_model','qu_type','qu_detail', 'img_path');
+        $datas = DB::table('feed_back')
+            ->select('id','job_num','name','phone','phone_model','qu_type','qu_detail','submit_time','img_path','is_look')
+            ->orderBy('submit_time','desc');
         return $datas->paginate($size);
     }
 
-    public static function setConfb($size,$input,$value){
-        $datas = DB::table('feed_back')->orderBy('id','desc')
-            ->select('id','job_num','name','phone','phone_model','qu_type','qu_detail', 'img_path');
+    public static function setConfb($size,$input,$value,$timeData){
+        $datas = DB::table('feed_back')
+            ->select('id','job_num','name','phone','phone_model','qu_type','qu_detail','submit_time','img_path','is_look')
+            ->orderBy('submit_time','desc');
         if ($value!=null)
             $datas = $datas->where('qu_type',$value);
         if ($input!=null)
-            $datas = $datas->where('job_num',$input)->orWhere('name',$input)->orWhere('phone',$input);
+            $datas = $datas->where('job_num','like','%'.$input.'%')->orWhere('name','like','%'.$input.'%')->orWhere('phone','like','%'.$input.'%');
+        if ($timeData!=null)
+            $datas = $datas->whereBetween('submit_time',$timeData);
         return $datas->paginate($size);
+    }
+
+    public static function updateFb($id,$updateArr){
+        if(DB::table('feed_back')->where('id',$id)->update($updateArr))
+            return 1;                  //更新成功
+        else
+            return 0;
     }
 }

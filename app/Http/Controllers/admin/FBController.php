@@ -32,10 +32,12 @@ class FBController
             }
         }
         $feedArr['img_path'] = json_encode($nameArr);
-        if(FeedBack::saveFB($feedArr))
+        $feedArr['submit_time'] = time();
+        $feedArr['is_look'] = 0;
+        if(FeedBack::saveFb($feedArr))
             return responseToJson('0',"success","问题提交成功");
         else
-            return responseToJson('1',"failed","问题提交失败");;
+            return responseToJson('1',"failed","问题提交失败");
 
     }
 
@@ -49,8 +51,27 @@ class FBController
         $size = $request->size;
         $input = $request->input;
         $value = $request->value;
-        $setData = FeedBack::setConfb($size,$input,$value);
+        $timeData = strtotime($request->timeData);
+        $timeData = [$timeData, $timeData+3600];
+        $setData = FeedBack::setConfb($size,$input,$value,$timeData);
         return $setData?responseToJson(0,"success",$setData):responseToJson(1,"failed","无查询数据");
 
+    }
+
+    public function getImg($imgName){
+        $path=storage_path().'/app/images/'.$imgName;    //获取图片位置的方法
+        $image_info = getimagesize($path);
+        $image_data = fread(fopen($path, 'r'), filesize($path));
+        $base64_image = 'data:' . $image_info['mime'] . ';base64,' . chunk_split(base64_encode($image_data));
+        return $base64_image;
+    }
+
+    public function updateType(Request $request){
+        $id = $request->id;
+        $typeArr = $request->type;
+        if(FeedBack::updateFb($id,$typeArr))
+            return responseToJson('0',"success","更新成功");
+        else
+            return responseToJson('1',"failed","页面进不去");
     }
 }
