@@ -74,4 +74,18 @@ class FBController
         else
             return responseToJson('1',"failed","页面进不去");
     }
+
+    public function deleteFb(Request $request){
+        $id = $request->id;
+        $imgPath = $request->imgPath;
+        if(count($imgPath)!=0)
+            foreach ($imgPath as $value){
+                if(!Storage::disk('images')->delete($value))
+                    return responseToJson('1',"failed","删除失败");;
+            }
+        if(FeedBack::deleteFb($id))
+            return responseToJson('0',"success","删除成功");
+        else
+            return responseToJson('1',"failed","删除失败");
+    }
 }
