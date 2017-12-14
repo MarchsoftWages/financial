@@ -232,7 +232,15 @@
                 }).then( res => {
                     document.getElementById('test1').style.transform = 'translate(-'+(this.end - this.start + 1 - 3)*110+'px, 0)';
                     if(res.data.code == 0){
-                        let data = res.data.result
+                        let data1 = []
+                        let data = []
+                        for (let i in res.data.result){
+                            data1.push(res.data.result[i])
+                        }
+                        for (let i = data1.length-1; i >= 0; i--){
+                            data.push(data1[i])
+                        }
+                        console.log(data)
                         let year_total = 0
                         let year_should = 0
                         let year_except = 0

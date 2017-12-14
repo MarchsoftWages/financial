@@ -35,8 +35,7 @@ class QueryController extends Controller
                     $data[$info->pay_month]['showContent'] = false;
                 }
             }
-            //排序
-            rsort($data);
+            //ksort($data);
             return responseToJson(0,'success',$data);
         }else{
             return responseToJson(1,'error','没有查询结果');
