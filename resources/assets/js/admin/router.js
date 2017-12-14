@@ -16,10 +16,20 @@ export default new VueRouter({
             component: resolve =>void(require(['./app/Log.vue'], resolve))
         },
         {
+            name: "意见反馈",
+            path: '/fb',
+            component: resolve =>void(require(['./app/Feedback.vue'], resolve)),
+        },
+        {
+            name: "详情",
+            path: '/fb/fb_read',
+            component: resolve =>void(require(['./app/Fbdetail.vue'], resolve)),
+        },
+        {
             name: "修改密码",
             path: '/change',
             component: resolve =>void(require(['./app/Change.vue'], resolve))
         },
-        
+
     ]
 })

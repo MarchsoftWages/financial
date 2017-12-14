@@ -1,14 +1,15 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: 海王星的飘雪
+ * Date: 2017/12/12
+ * Time: 15:13
+ */
+
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin;
-use Illuminate\Http\Request;
 
-class TestController extends Controller
+class TestController
 {
-    public function test(Request $request)
-    {
 
-    }
 }

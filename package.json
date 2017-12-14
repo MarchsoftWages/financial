@@ -29,6 +29,10 @@
     "vux": "^2.2.1-rc.7",
     "vux-loader": "^1.0.57",
     "less": "^2.7.3",
-    "less-loader": "^4.0.5"
+    "less-loader": "^4.0.5",
+    "exif-js": "^2.3.0"
+  },
+  "dependencies": {
+    
   }
 }

@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="head">
-            <x-header :left-options="{showBack: false}">工资查询</x-header>
+            <x-header :left-options="{showBack: false}">工资查询
+                <a style="text-decoration: none" slot="right" @click="feedUrl">反馈</a>
+            </x-header>
             <div class="button-tab">
                 <i class="self-icon" @click="leftChange">&lt;</i>
                 <scroller lock-y :scrollbar-x=false>
@@ -136,7 +138,7 @@
         margin-right: 6px;
     }
     .demo1-item-selected {
-        background: #ffffff url('/img/wx/bg.png') no-repeat right bottom;
+        background: #ffffff url('../../../img/wx/bg.png') no-repeat right bottom;
         border-color: #ff4a00;
     }
     .box {
@@ -342,6 +344,17 @@
                 this.demo1Required = value
                 this.get_year()
             },
+            feedUrl(){
+                let vm = this;
+                vm.$router.push({
+                    path: '/job_fb',
+                    query: {
+                        jobNumber:vm.$route.params.job_num,
+                        jobYear:this.demo1Required
+                    }
+                });
+            },
+
             //格式化两位小数
             toDecimal(x) {
                 var f = parseFloat(x);
@@ -389,8 +402,8 @@
             },
         },
         mounted() {
-            this.get_year()
-            $('.box').css('width',(this.end - this.start + 1)*110 + 'px')
+            this.get_year();
+            $('.box').css('width',(this.end - this.start + 1)*110 + 'px');
         },
     }
 </script>

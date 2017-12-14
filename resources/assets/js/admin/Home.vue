@@ -15,7 +15,7 @@
             </el-upload>
             <span class="download-span"><a class="download-a first-file">正常工资模板</a></span>
         </div>
-        
+
         <div @click="setCpyid(1)">
             <el-upload class="upload-demo" drag :show-file-list="false"
                        :action="importFileUrl"

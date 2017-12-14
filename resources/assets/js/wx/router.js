@@ -11,5 +11,10 @@ export default new VueRouter({
             path: '/:job_num/:month',
             component: resolve =>void(require(['./home/Home.vue'], resolve))
         },
+        {
+            name: "fb_home",
+            path: '/job_fb',
+            component: resolve =>void(require(['./home/Feedback.vue'], resolve))
+        }
     ]
 })

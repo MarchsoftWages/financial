@@ -91,8 +91,9 @@ class Pay extends Model
      * @return mixed
      */
     public static function getLogs($type,$size){
-        $datas = DB::table('operation_log')->orderBy('upload_time','desc')
-            ->select('file_name','operater','upload_time','mark','type','state');
+        $datas = DB::table('operation_log')
+            ->select('file_name','operater','upload_time','mark','type','state')
+            ->orderBy('upload_time','desc');
         if ($type==1)
             return $datas->where('type',0)->paginate($size);
         if ($type==2)
@@ -108,8 +109,9 @@ class Pay extends Model
      * @return bool
      */
     public static function getLog($type,$input,$value){
-        $data = DB::table('operation_log')->orderBy('upload_time','desc')
-            ->select('file_name','operater','upload_time','mark','type','state');
+        $data = DB::table('operation_log')
+            ->select('file_name','operater','upload_time','mark','type','state')
+            ->orderBy('upload_time','desc');
         if ($input==""&&$value=="")
             return false;
         if ($input!=""&&$value==""){

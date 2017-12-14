@@ -62,6 +62,13 @@ return [
             'root' => storage_path('app/uploads'),
         ],
 
+        //images用于存储上传的文件
+        'images' => [
+            'driver' => 'local',
+            // 文件将上传到storage/app/uploads目录
+            'root' => storage_path('app/images'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_KEY'),
