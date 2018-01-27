@@ -18,15 +18,19 @@ class Pay extends Model
     {
         DB::beginTransaction();
         try{
-            if(
-                DB::table('pay')->insert($payArr)
-                &&DB::table('pay_other')->insert($payOtherArr)
-                &&DB::table('operation_log')->insert($logArr)
-            ){
-                DB::commit();
-                return 0;    //成功
-            }else{
-                throw new \Exception("失败");
+            $flag = false;
+            for ($i=0;$i<count($payArr);$i++){
+                if(!DB::table('pay')->insert($payArr[$i])||!DB::table('pay_other')->insert($payOtherArr[$i])){
+                    $flag = true;
+                    throw new \Exception("失败");
+                    break;
+                }
+            }
+            if (!$flag) {
+                if (DB::table('operation_log')->insert($logArr)) {
+                    DB::commit();
+                    return 0;    //成功
+                }
             }
         }catch (\Exception $e){
             DB::rollback();//事务回滚
@@ -45,15 +49,21 @@ class Pay extends Model
     public static function updateExcel($payArr,$payOtherArr,$logArr){
         DB::beginTransaction();
         try{
-            if(
-                self::updateBatch('pay','flag',$payArr)
-                &&self::updateBatch('pay_other','flag',$payOtherArr)
-                &&self::updateBatch('operation_log','mark',$logArr)
-            ){
-                DB::commit();
-                return 0;    //成功
-            }else{
-                throw new \Exception("失败");
+            $flag = false;
+            for ($i=0;$i<count($payArr);$i++){
+                if(!self::updateBatch('pay','flag',$payArr[$i])
+                    ||!self::updateBatch('pay_other','flag',$payOtherArr[$i])
+                ){
+                    $flag = true;
+                    throw new \Exception("失败");
+                    break;
+                }
+            }
+            if (!$flag){
+                if(self::updateBatch('operation_log','mark',$logArr)){
+                    DB::commit();
+                    return 0;    //成功
+                }
             }
         }catch (\Exception $e){
             DB::rollback();//事务回滚

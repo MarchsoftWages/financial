@@ -60,7 +60,7 @@
                     prop="submit_time"
                     label="上传时间"
                     :formatter="judgeDate"
-                    width="185">
+                    width="200">
             </el-table-column>
             <el-table-column
                     label="操作"
@@ -75,7 +75,7 @@
                     <el-button
                             type="danger"
                             size="small"
-                            @click="deleteFb(scope.row.id)">删除
+                            @click="deleteFb(scope.row.id,scope.row.img_path)">删除
                     </el-button>
                 </template>
             </el-table-column>
@@ -272,8 +272,29 @@
                     }
                 });
             },
-            deleteFb(id){
-                console.log(id);
+            deleteFb(id,imgArr){
+                let vm = this;
+                vm.$confirm('此操作将删除该记录, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'info'
+                }).then(() => {
+                    axios.post('/delete_Fb', {
+                        id:id,
+                        imgPath: JSON.parse(imgArr)
+                    }).then(function (response) {
+                        if(response.data.code == 1){
+                            vm.$message({message: response.data.result,type: 'warning'});
+                            return;
+                        }
+                        vm.searchFb();
+                        vm.$message({type: 'success', message: response.data.result});
+                    }).catch(function (response) {
+                        console.log(response.data);
+                    });
+                }).catch(() => {
+                    vm.$message({type: 'info', message: '已取消删除'});
+                });
             },
             suBstr(str, n) {//字符串截取 包含对中文处理
                 if (str.replace(/[\u4e00-\u9fa5]/g, "**").length <= n)

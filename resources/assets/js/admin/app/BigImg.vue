@@ -65,5 +65,6 @@
         right: 0;
         margin: auto;
         z-index: 1000;
+        cursor: pointer;
     }
 </style>

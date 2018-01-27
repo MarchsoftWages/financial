@@ -50,4 +50,11 @@ class FeedBack
         else
             return 0;
     }
+
+    public static function deleteFb($id){
+        if(DB::table('feed_back')->where('id',$id)->delete())
+            return 1;                  //删除成功
+        else
+            return 0;
+    }
 }

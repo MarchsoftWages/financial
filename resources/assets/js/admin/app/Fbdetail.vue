@@ -90,9 +90,11 @@
     .image {
         width: 150px;
         margin: 0 10px;
+        cursor: pointer;
     }
     .box-card {
         width: 782px;
+
     }
     .item-card{
         margin: 20px 0;

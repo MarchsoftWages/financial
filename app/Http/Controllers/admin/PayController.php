@@ -32,19 +32,28 @@ class PayController extends Controller
             if ($bool){
                 $excel = $this->readExcel($fileInfo['fileRealName'],$fileInfo['filExtension']);
                 $this->openProgress = true;
-                $payArr = $this->getPayArray($excel,$cpyId,$flag);
-                $payOtherArr = $this->getPayOtherArr($excel,$flag);
+                $payArr = [];
+                $payOtherArr = [];
+                $payPost = [];
+                for ($i=0;$i<count($excel)/1500;$i++){
+                    $pArr = $this->getPayArray(array_slice($excel,$i*1500,1500),$cpyId,$flag);
+                    $payArr[$i] = $pArr[0];
+                    $payPost[$i] = $pArr[1];
+                    $payOtherArr[$i] = $this->getPayOtherArr(array_slice($excel,$i*1500,1500),$flag);
+                }
                 $logArr = $this->getLogArr([$fileInfo['fileName'],$fileInfo['fileRealName']],$flag,$cpyId);
+
                 if($request->updateType==1){
-                    $result = Pay::addExcel($payArr[0],$payOtherArr,$logArr);
+                    $result = Pay::addExcel($payArr,$payOtherArr,$logArr);
                     if (!$result){
                         //$this->postInfo($payArr[1]);
+                        $this->postInfo($payPost);
                         $code = 0;
                         $msg = "success";
                         $paras = "上传成功";
                     }
                 }else{
-                    $result = Pay::updateExcel($payArr[0],$payOtherArr,$logArr);
+                    $result = Pay::updateExcel($payArr,$payOtherArr,$logArr);
                     if (!$result){
                         $code = 0;
                         $msg = "success";
@@ -271,10 +280,14 @@ class PayController extends Controller
      * @param $data
      */
     public function postInfo($data){
+        $dataArr = [];
+        for ($i=0;$i<count($data);$i++){
+            $dataArr = array_merge_recursive($dataArr,$data[$i]);
+        }
         $client = new Client();
         $response = $client->request('POST', getenv('SEND_URL'), [
             'form_params' => [
-                'detail_list' => json_encode($data),
+                'detail_list' => json_encode($dataArr),
             ]
         ]);
 
