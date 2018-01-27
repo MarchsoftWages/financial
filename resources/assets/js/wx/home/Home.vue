@@ -242,7 +242,6 @@
                         for (let i = data1.length-1; i >= 0; i--){
                             data.push(data1[i])
                         }
-                        console.log(data)
                         let year_total = 0
                         let year_should = 0
                         let year_except = 0
@@ -253,6 +252,7 @@
                             if(data[i]['second'] != undefined){
                                 data[i]['second'].wages = JSON.parse(data[i]['second'].wages)
                             }
+                            if(data[i]['first']==undefined) break;
                             //正常工资发放
                             year_total = year_total + data[i]['first'].wages['工资实发额']
                             year_should = year_should + data[i]['first'].wages['应发合计']

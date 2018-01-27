@@ -34,6 +34,9 @@
                 <x-input title="联系电话：" v-model="phone" keyboard="number" is-type="china-mobile" placeholder="选填，便于我们联系你"></x-input>
             </group>
             <x-button type="primary" @click.native="postImg" action-type="button">提交</x-button>
+            <div class="footer">
+                &copy;<a href="http://www.marchsoft.cn">三月软件</a>提供技术支持
+            </div>
         </div>
     </div>
 </template>
@@ -80,6 +83,18 @@
         background-position: center center;
         background-repeat: no-repeat;
         background-size: cover;
+    }
+    .footer{
+        width: 100%;
+        height: 20px;
+        text-align: center;
+        position: absolute;
+        bottom: 10px;
+        color: #999;
+    }
+    .footer a {
+        text-decoration: none;
+        color: #999;
     }
 </style>
 <script>

@@ -38,7 +38,7 @@ class PayController extends Controller
                 if($request->updateType==1){
                     $result = Pay::addExcel($payArr[0],$payOtherArr,$logArr);
                     if (!$result){
-                        $this->postInfo($payArr[1]);
+                        //$this->postInfo($payArr[1]);
                         $code = 0;
                         $msg = "success";
                         $paras = "上传成功";
