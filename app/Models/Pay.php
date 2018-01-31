@@ -11,26 +11,17 @@ class Pay extends Model
      * 上传工资记录
      * @param $payArr
      * @param $payOtherArr
-     * @param $logArr
      * @return int
      */
-    public static function addExcel($payArr,$payOtherArr,$logArr)
+    public static function addExcel($payArr,$payOtherArr)
     {
         DB::beginTransaction();
         try{
-            $flag = false;
-            for ($i=0;$i<count($payArr);$i++){
-                if(!DB::table('pay')->insert($payArr[$i])||!DB::table('pay_other')->insert($payOtherArr[$i])){
-                    $flag = true;
-                    throw new \Exception("失败");
-                    break;
-                }
-            }
-            if (!$flag) {
-                if (DB::table('operation_log')->insert($logArr)) {
-                    DB::commit();
-                    return 0;    //成功
-                }
+            if(DB::table('pay')->insert($payArr)&&DB::table('pay_other')->insert($payOtherArr)){
+                DB::commit();
+                return 0;    //成功
+            }else{
+                throw new \Exception("失败");
             }
         }catch (\Exception $e){
             DB::rollback();//事务回滚
@@ -40,36 +31,45 @@ class Pay extends Model
     }
 
     /**
+     * 写入日志
+     * @param $logArr
+     * @return mixed
+     */
+    public static function addLogs($logArr){
+        return DB::table('operation_log')->insert($logArr);
+    }
+
+    /**
      * 覆盖录入
      * @param $payArr
      * @param $payOtherArr
-     * @param $logArr
      * @return int
      */
-    public static function updateExcel($payArr,$payOtherArr,$logArr){
+    public static function updateExcel($payArr,$payOtherArr){
         DB::beginTransaction();
         try{
-            $flag = false;
-            for ($i=0;$i<count($payArr);$i++){
-                if(!self::updateBatch('pay','flag',$payArr[$i])
-                    ||!self::updateBatch('pay_other','flag',$payOtherArr[$i])
-                ){
-                    $flag = true;
-                    throw new \Exception("失败");
-                    break;
-                }
-            }
-            if (!$flag){
-                if(self::updateBatch('operation_log','mark',$logArr)){
-                    DB::commit();
-                    return 0;    //成功
-                }
+            if(self::updateBatch('pay','flag',$payArr)
+                &&self::updateBatch('pay_other','flag',$payOtherArr)
+            ){
+                DB::commit();
+                return 0;    //成功
+            }else{
+                throw new \Exception("失败");
             }
         }catch (\Exception $e){
             DB::rollback();//事务回滚
             return 2; //数据相同
         }
 
+    }
+
+    /**
+     * 更新日志
+     * @param $logArr
+     * @return bool
+     */
+    public static function updatedLogs($logArr){
+        return self::updateBatch('operation_log','mark',$logArr);
     }
 
     /**
@@ -153,43 +153,35 @@ class Pay extends Model
     /**
      * 批量更新
      * @param $tableName   //表名
-     * @param null $condition  //更新依据字段
+     * @param $condition  //更新依据字段
      * @param array $multipleData  //更新数组
      * @return bool     //返回结果
      */
-    public static function updateBatch($tableName,$condition = null,$multipleData = []){
-        try {
-            if (empty($multipleData)) {
-                throw new \Exception("数据不能为空");
-            }
-            $firstRow  = current($multipleData);
-
-            $updateColumn = array_keys($firstRow);
-            // 默认以id为条件更新，如果没有ID则以第一个字段为条件
-            $referenceColumn = $condition==null ? 'id' : $condition;
+    public static function updateBatch($tableName = "", $condition = "" ,$multipleData = []){
+        if( $tableName && !empty($multipleData) && $condition) {
+            $updateColumn = array_keys($multipleData[0]);
+            $referenceColumn = $updateColumn[0];
             unset($updateColumn[0]);
-            // 拼接sql语句
-            $updateSql = "UPDATE " . $tableName . " SET ";
-            $sets      = [];
-            $bindings  = [];
-            foreach ($updateColumn as $uColumn) {
-                $setSql = "`" . $uColumn . "` = CASE ";
-                foreach ($multipleData as $data) {
-                    $setSql .= "WHEN `" . $referenceColumn . "` = ? THEN ? ";
-                    $bindings[] = $data[$referenceColumn];
-                    $bindings[] = $data[$uColumn];
+            array_pop($updateColumn);
+            $whereIn = "";
+            $whereAnd = "";
+            $q = "UPDATE ".$tableName." SET ";
+            foreach ( $updateColumn as $uColumn ) {
+                $q .=  $uColumn." = CASE ";
+
+                foreach( $multipleData as $data ) {
+                    $q .= "WHEN ".$referenceColumn." = ".$data[$referenceColumn]." THEN '".$data[$uColumn]."' ";
                 }
-                $setSql .= "ELSE `" . $uColumn . "` END ";
-                $sets[] = $setSql;
+                $q .= "ELSE ".$uColumn." END, ";
             }
-            $updateSql .= implode(', ', $sets);
-            $whereIn   = collect($multipleData)->pluck($referenceColumn)->values()->all();
-            $bindings  = array_merge($bindings, $whereIn);
-            $whereIn   = rtrim(str_repeat('?,', count($whereIn)), ',');
-            $updateSql = rtrim($updateSql, ", ") . " WHERE `" . $referenceColumn . "` IN (" . $whereIn . ")";
-            // 传入预处理sql语句和对应绑定数据
-            return DB::update($updateSql, $bindings);
-        } catch (\Exception $e) {
+            foreach( $multipleData as $data ) {
+                $whereIn .= "'".$data[$referenceColumn]."', ";
+                $whereAnd .= "'".$data[$condition]."', ";
+            }
+            $q = rtrim($q, ", ")." WHERE ".$referenceColumn." IN (".rtrim($whereIn, ', ').") AND ".$condition." IN(".rtrim($whereAnd, ', ').")"  ;
+            return DB::update(DB::raw($q));
+
+        } else {
             return false;
         }
     }
