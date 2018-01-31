@@ -52,13 +52,13 @@ class PayController extends Controller
 
     /**
      * 读取表格
-     * @param $fileRealName
-     * @param $fileType
-     * @param $step
-     * @param $type
-     * @param $cpyId
-     * @param $flag
-     * @return bool
+     * @param $fileRealName  文件名
+     * @param $fileType      文件类型
+     * @param $step          分块长度
+     * @param $type          插入更新
+     * @param $cpyId         id
+     * @param $flag          标记
+     * @return bool          返回bool
      */
     public function readExcel($fileRealName,$fileType,$step,$type,$cpyId,$flag){
         $filePath = storage_path().'/app/uploads/'.iconv('UTF-8','GBK',$fileRealName).".".$fileType;
