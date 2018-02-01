@@ -14,7 +14,7 @@ class QueryController extends Controller
 
     /**
      * 获取全年的工资
-     * @param Request $request
+     * @param Request $requestj
      * @return \Illuminate\Http\JsonResponse
      */
     public function get_year(Request $request)
