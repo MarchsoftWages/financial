@@ -119,6 +119,9 @@
         display: flex;
         justify-content: center;
     }
+    .el-date-picker .el-input{
+        width: 128px;
+    }
 </style>
 <script type="text/ecmascript-6">
     import { Loading } from 'element-ui'
