@@ -65,16 +65,16 @@ class PayController extends Controller
         Excel::selectSheetsByIndex(0)->filter('chunk')->load($filePath)
             ->chunk($step , function($results) use($type,$cpyId,$flag){
                 $array = $results->toArray();
-                if(end($array)["工号"] == null)
-                    array_pop($array);
+                end($array)["工号"] == null?array_pop($array):$array;
                 $pArr = PayController::getPayArray($array,$cpyId,$flag);
                 $otherArr = PayController::getPayOtherArr($array,$flag);
-                if (($type==1?Pay::addExcel($pArr[0], $otherArr):Pay::updateExcel($pArr[0],$otherArr))) {
-                    PayController::$addExcels = false;
-                    return;
-                }
-//                PayController::$payPost[] = $pArr[1];
+                // if (($type==1?Pay::addExcel($pArr[0], $otherArr):Pay::updateExcel($pArr[0],$otherArr))) {
+                //     PayController::$addExcels = false;
+                //     return;
+                // }
+                // PayController::$payPost[] = $pArr[1];
             });
+        exit();
         return PayController::$addExcels;
     }
 

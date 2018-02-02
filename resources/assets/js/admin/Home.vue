@@ -1,5 +1,7 @@
 <template>
-    <div style="display: flex; justify-content: space-evenly;">
+    <div style="display: flex; justify-content: space-evenly;"
+            v-loading.fullscreen = "loadingInstance"
+            element-loading-text = "拼命加载中,请稍后...">
         <div @click="setCpyid(0)">
             <el-upload class="upload-demo" drag :show-file-list="false"
                        :action="importFileUrl"
@@ -31,6 +33,14 @@
             </el-upload>
             <span class="download-span"><a class="download-a second-file">特殊发放模板</a></span>
         </div>
+        <div v-bind:class="{ progress: loadingInstance }">
+            <el-progress 
+            :text-inside="true" 
+            :stroke-width="20" 
+            :percentage="percentage" 
+            :status="status">
+            </el-progress>
+        </div>
     </div>
 </template>
 <style>
@@ -52,9 +62,48 @@
         font-size: 10px;
         text-decoration: none;
     }
+    .progress{
+        position: fixed;
+        z-index: 10001;
+        background-color: rgba(255,255,255,0);
+        margin: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    .el-progress{
+        top:65%;
+        width: 60%;
+        margin:0 auto; 
+    }
+    .el-progress-bar__inner::after { 
+        content: ''; 
+        opacity: 0; 
+        position: absolute; 
+        top: 0; 
+        right: 0; 
+        bottom: 0; 
+        left: 0; 
+        background: #fff; 
+        -moz-border-radius: 3px; 
+        -webkit-border-radius: 3px; 
+        border-radius: 3px; 
+        -webkit-animation: animate-shine 3s ease-out infinite; 
+        -moz-animation: animate-shine 3s ease-out infinite; 
+    } 
+    @-webkit-keyframes animate-shine { 
+        0% {opacity: 0; width: 0;} 
+        50% {opacity: .5;} 
+        100% {opacity: 0; width: 95%;} 
+    } 
+    @-moz-keyframes animate-shine { 
+        0% {opacity: 0; width: 0;} 
+        50% {opacity: .5;} 
+        100% {opacity: 0; width: 95%;} 
+    } 
 </style>
 <script type="text/ecmascript-6">
-    import { Loading } from 'element-ui'
     export default {
         data(){
             return {
@@ -66,8 +115,10 @@
                 headers:{
                     'X-CSRF-TOKEN':document.head.querySelector('meta[name="X-CSRF-TOKEN"]').content
                 },
-                loadingInstance:'',   //loading
-                progressCount:''
+                loadingInstance:false,   //loading
+                progressCount:'',
+                percentage:0,
+                status:''
             }
         },
         computed: {
@@ -81,12 +132,20 @@
              * @param fileList
              */
             uploadSuccess (response, file, fileList) {
-                this.loadingInstance.close();
-                if(response.code==1){
-                    this.$message.error(response.result);
-                    return;
+                var this_ = this;
+                if(response.code ==1 ){
+                    this_.percentage = 0;
+                    this_.status = "exception";
+                }else{
+                    this_.percentage = 100;
+                    this_.status = "success";
                 }
-                this.$message({message: response.result, type: 'success'});
+                setTimeout(function(){
+                    this_.loadingInstance = false;
+                    this_.status = "";
+                    response.code==1?this_.$message.error(response.result):this_.$message({message: response.result, type: 'success'});
+                },600);
+                
             },
             /**
              * 上传错误
@@ -95,7 +154,7 @@
              * @param fileList
              */
             uploadError (response, file, fileList) {
-                this.loadingInstance.close();
+                this.loadingInstance = false;
                 this.$message.error('上传失败，请重试！');
             },
             /**
@@ -113,11 +172,21 @@
                 if (!isLt2M) {
                     this.$message({message: '上传模板大小不能超过 2MB!',type: 'warning'});
                 }
-                this.loadingInstance = Loading.service({ fullscreen: true });
+                this.loadingInstance = true;
                 return extension || extension2 && isLt2M
             },
             setCpyid(val){
                 this.upLoadData.cpyId = val;
+                var this_ = this;
+                setTimeout(function(){
+                    this_.percentage = parseInt(Math.random()*10*3+10,10);
+                    setTimeout(function(){
+                        this_.percentage = parseInt(Math.random()*10*2+37,10);
+                        setTimeout(function(){
+                            this_.percentage = parseInt(Math.random()*10*3+64,10);
+                        },parseInt(Math.random()*100+2800,10));
+                    },parseInt(Math.random()*100+2000,10));
+                },parseInt(Math.random()*100+300,10));
             },
         },
         mounted() {

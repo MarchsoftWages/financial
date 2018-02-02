@@ -1,5 +1,7 @@
 <template>
-    <div class="el-table-self">
+    <div class="el-table-self"
+            v-loading.fullscreen = "loadingInstance"
+            element-loading-text = "拼命加载中">
         <el-dialog title="覆盖上传" :visible.sync="updateVisible"
                    size="tiny"
                    :key="randomNumber">
@@ -129,7 +131,6 @@
     }
 </style>
 <script type="text/ecmascript-6">
-    import { Loading } from 'element-ui'
     export default {
         data(){
             return {
@@ -157,7 +158,7 @@
                         }
                     ]
                 },
-                loadingInstance:'',   //loading
+                loadingInstance:false,   //loading
                 changeSearch:0,
                 radio:0,
                 oldRadio:0,
@@ -225,11 +226,11 @@
                     cancelButtonText: '取消',
                     type: 'info'
                 }).then(() => {
-                    this_.loadingInstance = Loading.service({ fullscreen: true });
+                    this_.loadingInstance = true;
                     axios.post('/admin/delete', {
                         flag:row.mark
                     }).then(function (response) {
-                        this_.loadingInstance.close();
+                        this_.loadingInstance = false;
                         this_.getData('/getlogs?page='+this_.pageData.current_page+'&type='+this_.radio,0);
                         if(response.data.code==3)
                             this_.$message.error(response.data.result);
@@ -237,7 +238,7 @@
                             this_.$message({type: 'success', message: response.data.result});
                         }
                     }).catch(function (response) {
-                        this_.loadingInstance.close();
+                        this_.loadingInstance = false;
                         console.log(response.data);
                     });
 
@@ -256,7 +257,7 @@
                 axios.get(url)
                 .then(function (response) {
 
-                    this_.loadingInstance.close();
+                    this_.loadingInstance = false;
                     if (response.data.code==0){
                         if(type==0)
                             this_.pageData=response.data.result;
@@ -266,7 +267,7 @@
                         this_.$message.error(response.data.result);
                 }).catch(function (response) {
                     console.log(response.data);
-                    this_.loadingInstance.close();
+                    this_.loadingInstance = false;
                 });
 
             },
@@ -277,7 +278,7 @@
              * @param fileList
              */
             upSuccess (response, file, fileList) {
-                this.loadingInstance.close();
+                this.loadingInstance = false;
                 this.updateVisible = false;
                 this.getData('/getlogs?page='+this.pageData.current_page+'&type='+this.radio,0);
                 if(response.code==1){
@@ -314,7 +315,7 @@
                 if (!isLt2M) {
                     this.$message({message: '上传模板大小不能超过 2MB!',type: 'warning'});
                 }
-                this.loadingInstance = Loading.service({ fullscreen: true });
+                this.loadingInstance = true;
                 return extension || extension2 && isLt2M
             },
             /**
@@ -338,7 +339,7 @@
              * 根据条件查找
              */
             searchLog(){
-                this.loadingInstance = Loading.service({ fullscreen: true });
+                this.loadingInstance = true;
                 if(this.input!=""||this.value!=""){
                     this.getData('/getlog?type='+this.radio+'&input='+this.input+'&value='+this.value,1);
                 }else {
@@ -347,7 +348,7 @@
             },
         },
         mounted() {
-            this.loadingInstance = Loading.service({ fullscreen: true });
+            this.loadingInstance = true;
             this.getData('/getlogs?page=1&type='+this.radio,0);
             this.$emit('path',this.$route.path);
         },

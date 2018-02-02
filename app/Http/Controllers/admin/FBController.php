@@ -41,18 +41,12 @@ class FBController
 
     }
 
-    public function selectFb(Request $request){
-        $size = $request->size;
-        $dataFb = FeedBack::getFb($size);
-        return $dataFb?responseToJson(0,"success",$dataFb):responseToJson(1,"failed","无查询数据");
-    }
-
     public function selConfb(Request $request){
         $size = $request->size;
         $input = $request->input;
         $value = $request->value;
-        $timeData = strtotime($request->timeData);
-        $timeData = [$timeData, $timeData+3600];
+        $timeData = $request->timeData==null?$request->timeData:strtotime($request->timeData);
+        $timeData = $timeData==null?$timeData:[$timeData, $timeData+3600];
         $setData = FeedBack::setConfb($size,$input,$value,$timeData);
         return $setData?responseToJson(0,"success",$setData):responseToJson(1,"failed","无查询数据");
 

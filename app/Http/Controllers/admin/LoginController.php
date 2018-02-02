@@ -21,6 +21,7 @@ class LoginController extends Controller
             $name= $key->name;
             $password=$key->password;
         }
+
         if ($request->isMethod('post')) {
             $this ->validate($request,[
                 'user.name'=>'required|digits:6|regex:/^\d{6}$/',
