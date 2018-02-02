@@ -24,24 +24,15 @@ class FeedBack
      * 获取反馈意见
      * @return mixed
      */
-    public static function getFb($size=5){
-        $datas = DB::table('feed_back')
-            ->select('id','job_num','name','phone','phone_model','qu_type','qu_detail','submit_time','img_path','is_look')
-            ->orderBy('submit_time','desc');
-        return $datas->paginate($size);
-    }
 
     public static function setConfb($size,$input,$value,$timeData){
         $datas = DB::table('feed_back')
-            ->select('id','job_num','name','phone','phone_model','qu_type','qu_detail','submit_time','img_path','is_look')
-            ->orderBy('submit_time','desc');
-        if ($value!=null)
-            $datas = $datas->where('qu_type',$value);
-        if ($input!=null)
-            $datas = $datas->where('job_num','like','%'.$input.'%')->orWhere('name','like','%'.$input.'%')->orWhere('phone','like','%'.$input.'%');
-        if ($timeData!=null)
-            $datas = $datas->whereBetween('submit_time',$timeData);
-        return $datas->paginate($size);
+            ->select('id','job_num','name','phone','phone_model','qu_type','qu_detail','submit_time','img_path','is_look');
+        $datas = $value==null?$datas:$datas->where('qu_type', $value);
+        $datas = $input==null?$datas:$datas->where('job_num','like','%'.$input.'%')
+        ->orWhere('phone','like','%'.$input.'%')->orWhere('name','like','%'.$input.'%');
+        $datas = $timeData==null?$datas:$datas->whereBetween('submit_time',$timeData);
+        return $datas->orderBy('submit_time','desc')->paginate($size);
     }
 
     public static function updateFb($id,$updateArr){

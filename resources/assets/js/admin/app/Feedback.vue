@@ -1,5 +1,7 @@
 <template>
-    <div class="el-table-self">
+    <div class="el-table-self"
+            v-loading.fullscreen = "loading"
+            element-loading-text = "拼命加载中">
         <el-breadcrumb class="el-breadcrumb">
             <el-select v-model="value" @change="searchFb" clearable placeholder="请选择问题类型">
                 <el-option
@@ -124,7 +126,6 @@
     }
 </style>
 <script type="text/ecmascript-6">
-    import { Loading } from 'element-ui'
     export default {
         data(){
             return {
@@ -146,7 +147,7 @@
                         }
                     ]
                 },
-                loading:'',   //loading
+                loading:false,   //loading
                 size:5,
                 input:'',
                 value:'',
@@ -178,7 +179,8 @@
              * 请求下一页的数据
              */
             handleCurrentChange(page) {
-                this.getFbdata('/getFbinfo?page='+page+'&size='+this.size);
+                this.getFbdata('/searFbinfo?page='+page+'&size='+this.size+'&input='+this.input+
+                    '&value='+this.value+'&timeData='+this.timeData);
             },
             /**
              * 显示页数
@@ -186,7 +188,8 @@
              */
             handleSizeChange(size){
                 this.size = size;
-                this.getFbdata('/getFbinfo?page='+this.pageData.current_page+'&size='+this.size);
+                this.getFbdata('/searFbinfo?page='+this.pageData.current_page+'&size='+this.size+
+                    '&input='+this.input+'&value='+this.value+'&timeData='+this.timeData);
             },
             judgeDate(data){
                 return  new Date(parseInt(data.submit_time) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
@@ -205,14 +208,14 @@
                 var this_ = this;
                 axios.get(url)
                     .then(function (response) {
-                        this_.loading.close();
+                        this_.loading = false;
                         if (response.data.code==0){
                             this_.pageData=response.data.result;
                         }else
                             this_.$message.error(response.data.result);
                     }).catch(function (response) {
                         console.log(response.data);
-                        this_.loading.close();
+                        this_.loading = false;
                 });
 
             },
@@ -235,12 +238,9 @@
              * 根据条件查找
              */
             searchFb(){
-                this.loading = Loading.service({ fullscreen: true });
-                if(this.input!=""||this.value!=""||this.timeData!=""){
-                    this.getFbdata('/searFbinfo?size='+this.size+'&page=1&input='+this.input+'&value='+this.value+'&timeData='+this.timeData);
-                }else {
-                    this.getFbdata('/getFbinfo?size='+this.size+'&page='+this.pageData.current_page);
-                }
+                this.loading = true ;
+                this.getFbdata('/searFbinfo?size='+this.size+'&page='+this.pageData.current_page+
+                    '&input='+this.input+'&value='+this.value+'&timeData='+this.timeData);
             },
             handleRead(id,isLook){
                 let vm = this;
@@ -321,8 +321,8 @@
 
         },
         mounted() {
-            this.loading = Loading.service({ fullscreen: true });
-            this.getFbdata('/getFbinfo?size=5&page=1');
+            this.loading = true ;
+            this.getFbdata('/searFbinfo?size=5&page=1'+'&input='+this.input+'&value='+this.value+'&timeData='+this.timeData);
             this.$emit('path',this.$route.path);
         },
     }
