@@ -36,7 +36,7 @@ class Query extends Model
     }
 
     /**
-     * 查询最近三个月的工资
+     * 查询最近三个月的工资+
      * @param $job_num 工号
      * @param $month    近三个月
      * @return int
