@@ -37,8 +37,10 @@ class PayController extends Controller
         if ($result&&($request->updateType==1)&&Pay::addLogs($logArr)){
             $this->postInfo(PayController::$payPost);
             return responseToJson(0,"success","上传成功");
+        }else{
+             return responseToJson(1,"failed","上传失败");
         }
-        if ($result&&Pay::updatedLogs($logArr)){
+        if ($result&&($request->updateType==2)&&Pay::updatedLogs($logArr)){
             $code = 0;
             $msg = "success";
             $paras = "重新录入成功";
@@ -68,13 +70,12 @@ class PayController extends Controller
                 end($array)["工号"] == null?array_pop($array):$array;
                 $pArr = PayController::getPayArray($array,$cpyId,$flag);
                 $otherArr = PayController::getPayOtherArr($array,$flag);
-                // if (($type==1?Pay::addExcel($pArr[0], $otherArr):Pay::updateExcel($pArr[0],$otherArr))) {
-                //     PayController::$addExcels = false;
-                //     return;
-                // }
-                // PayController::$payPost[] = $pArr[1];
+                if (($type==1?Pay::addExcel($pArr[0], $otherArr):Pay::updateExcel($pArr[0],$otherArr))) {
+                    PayController::$addExcels = false;
+                    return;
+                }
+                PayController::$payPost[] = $pArr[1];
             });
-        exit();
         return PayController::$addExcels;
     }
 
