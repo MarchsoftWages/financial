@@ -163,8 +163,9 @@
              * @returns {boolean}
              */
             beforeAvatarUpload (file) {
-                const extension = file.name.split('.')[1] === 'xls';
-                const extension2 = file.name.split('.')[1] === 'xlsx';
+                let name = file.name.split('.')
+                const extension = name[name.length-1] === 'xls';
+                const extension2 = name[name.length-1] === 'xlsx';
                 const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!extension && !extension2) {
                     this.$message({message: '上传模板只能是 xls、xlsx 格式!',type: 'warning'});

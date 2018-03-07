@@ -27,7 +27,7 @@ class PayController extends Controller
         $fileInfo = $this->getFiles($request->file('file'));
         $cpyId = $request->cpyId;
         $flag=($request->updateType==1?uniqid():$request->flag);
-        $step = 1000;
+        $step = 800;
         if(!($fileInfo['isValid']&&$fileInfo['isExcel'] &&Storage::disk('uploads')
                 ->put($fileInfo['fileRealName'].'.'.$fileInfo['filExtension'],file_get_contents($fileInfo['fileRealpath']))))
             //判断文件是否上传成功
@@ -37,8 +37,10 @@ class PayController extends Controller
         if ($result&&($request->updateType==1)&&Pay::addLogs($logArr)){
             $this->postInfo(PayController::$payPost);
             return responseToJson(0,"success","上传成功");
+        }else{
+             return responseToJson(1,"failed","上传失败");
         }
-        if ($result&&Pay::updatedLogs($logArr)){
+        if ($result&&($request->updateType==2)&&Pay::updatedLogs($logArr)){
             $code = 0;
             $msg = "success";
             $paras = "重新录入成功";
@@ -280,12 +282,12 @@ class PayController extends Controller
         for ($i=0;$i<count($data);$i++){
             $dataArr = array_merge_recursive($dataArr,$data[$i]);
         }
-//        $client = new Client();
-//        $response = $client->request('POST', getenv('SEND_URL'), [
-//            'form_params' => [
-//                'detail_list' => json_encode($dataArr),
-//            ]
-//        ]);
+        $client = new Client();
+        $response = $client->request('POST', getenv('SEND_URL'), [
+            'form_params' => [
+                'detail_list' => json_encode($dataArr),
+            ]
+        ]);
     }
 }
 
