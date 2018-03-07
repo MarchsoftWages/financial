@@ -27,7 +27,7 @@ class PayController extends Controller
         $fileInfo = $this->getFiles($request->file('file'));
         $cpyId = $request->cpyId;
         $flag=($request->updateType==1?uniqid():$request->flag);
-        $step = 1000;
+        $step = 800;
         if(!($fileInfo['isValid']&&$fileInfo['isExcel'] &&Storage::disk('uploads')
                 ->put($fileInfo['fileRealName'].'.'.$fileInfo['filExtension'],file_get_contents($fileInfo['fileRealpath']))))
             //判断文件是否上传成功
