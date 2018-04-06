@@ -23,9 +23,10 @@ class QueryController extends Controller
         $year = $request->year;
         $result = Query::get_year_wages($job_num,$year);
         if($result){
-            $data = array();
-            foreach ($result as $key => $info) {
-                if($info->type == 0){
+            $data = [];
+            $result = json_decode($result,true);
+            for ($i = 0;$i<count($result);$i++) {
+                /*if($info->type == 0){
                     $data[$info->pay_month]['first'] = $info;
                     $data[$info->pay_month]['showContent'] = false;
                     $data[$info->pay_month]['showContent1'] = false;
@@ -33,9 +34,17 @@ class QueryController extends Controller
                 }else{
                     $data[$info->pay_month]['second'] = $info;
                     $data[$info->pay_month]['showContent'] = false;
+                }*/
+                if($result[$i]['type'] == 0){
+                    $data[$i]['pay_month']['first'] = $result[$i];
+                    $data[$i]['pay_month']['showContent'] = false;
+                    $data[$i]['pay_month']['showContent1'] = false;
+                    $data[$i]['pay_month']['showContent2'] = false;
+                }else{
+                    $data[$i]['pay_month']['second'] = $result[$i];
+                    $data[$i]['pay_month']['showContent'] = false;
                 }
             }
-            //ksort($data);
             return responseToJson(0,'success',$data);
         }else{
             return responseToJson(1,'error','没有查询结果');

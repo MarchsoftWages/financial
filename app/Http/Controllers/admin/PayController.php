@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Pay;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -282,6 +283,7 @@ class PayController extends Controller
         for ($i=0;$i<count($data);$i++){
             $dataArr = array_merge_recursive($dataArr,$data[$i]);
         }
+        Log::info($dataArr);
         $client = new Client();
         $response = $client->request('POST', getenv('SEND_URL'), [
             'form_params' => [

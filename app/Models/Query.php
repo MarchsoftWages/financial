@@ -15,7 +15,7 @@ class Query extends Model
     {
         $result = DB::table('pay')
             ->where(['job_num'=>$job_num,'pay_year'=>$year,'status'=>0])
-            ->orderBy('wages_date','desc')
+            ->orderBy('wages_date','asc')
             ->get();
         return !$result->isEmpty() ? $result : 0;
     }
