@@ -314,16 +314,16 @@
                                 data[i]['second'].list.push({label:'暖气补',value:data[i]['second'].wages['暖气补']})
                                 data[i]['second'].list.push({label:'绩效补发',value:data[i]['second'].wages['绩效补发']})
                                 data[i]['second'].wages['合计'] = this.toDecimal(data[i]['second'].wages['教学奖励']+data[i]['second'].wages['科研奖励']+
-                                                                    data[i]['second'].wages['岗位津贴慰问金']+data[i]['second'].wages['补生活补贴']+
-                                                                    data[i]['second'].wages['薪级补发']+data[i]['second'].wages['补发文明奖']+
-                                                                    data[i]['second'].wages['发13年暖气补']+data[i]['second'].wages['补发住房补贴']+
-                                                                    data[i]['second'].wages['扣12年暖气费']+data[i]['second'].wages['精神文明奖']+
-                                                                    data[i]['second'].wages['保留福补补发']+data[i]['second'].wages['岗位绩效超教学科研']+
-                                                                    data[i]['second'].wages['慰问费']+data[i]['second'].wages['发14津补贴绩效调整']+
-                                                                    data[i]['second'].wages['补增加离退休费']+data[i]['second'].wages['补预增发']+
-                                                                    data[i]['second'].wages['13年平安奖']+data[i]['second'].wages['14年平安奖']+
-                                                                    data[i]['second'].wages['2016预发']+data[i]['second'].wages['目标考核奖']+
-                                                                    data[i]['second'].wages['平安奖']+data[i]['second'].wages['健康休养费'])
+                                data[i]['second'].wages['岗位津贴慰问金']+data[i]['second'].wages['补生活补贴']+
+                                data[i]['second'].wages['薪级补发']+data[i]['second'].wages['补发文明奖']+
+                                data[i]['second'].wages['发13年暖气补']+data[i]['second'].wages['补发住房补贴']+
+                                data[i]['second'].wages['扣12年暖气费']+data[i]['second'].wages['精神文明奖']+
+                                data[i]['second'].wages['保留福补补发']+data[i]['second'].wages['岗位绩效超教学科研']+
+                                data[i]['second'].wages['慰问费']+data[i]['second'].wages['发14津补贴绩效调整']+
+                                data[i]['second'].wages['补增加离退休费']+data[i]['second'].wages['补预增发']+
+                                data[i]['second'].wages['13年平安奖']+data[i]['second'].wages['14年平安奖']+
+                                data[i]['second'].wages['2016预发']+data[i]['second'].wages['目标考核奖']+
+                                data[i]['second'].wages['平安奖']+data[i]['second'].wages['健康休养费'])
                             }
 
                         }

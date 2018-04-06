@@ -43,10 +43,11 @@ class LoginController extends Controller
             $user_password=$data['password'];
             $user_captcha=$data['Captcha'];
         }
-
         if(($name==$user_name)&&($password==md5(md5($user_password)))){
+
             if(Session::get('milkcaptcha')==$user_captcha){
                 session(['checkLogin' => $name]);
+
                 return '<script> window.location.href="/#/" </script>';
             }else{
 
