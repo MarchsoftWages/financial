@@ -237,14 +237,12 @@
                         let data1 = []
                         let data = []
                         for (let i in res.data.result){
-                            data1.push(res.data.result[i])
-                        }
-                        for (let i = data1.length-1; i >= 0; i--){
-                            data.push(data1[i])
+                            data.push(res.data.result[i]['pay_month'])
                         }
                         let year_total = 0
                         let year_should = 0
                         let year_except = 0
+
                         for(let i in data){
                             if(data[i]['first'] != undefined) {
                                 data[i]['first'].wages = JSON.parse(data[i]['first'].wages)

@@ -6,4 +6,3 @@ Route::post("/detail/get", 'home\QueryController@get_detail');
 Route::post("/year/get", 'home\QueryController@get_year');
 Route::post("/query/get", 'home\QueryController@get_query');
 Route::post("/feedback", 'admin\FBController@feedBack');
-Route::get("/test", 'home\QueryController@test');

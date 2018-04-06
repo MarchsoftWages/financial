@@ -1,15 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: 海王星的飘雪
- * Date: 2017/12/12
- * Time: 15:13
- */
 
 namespace App\Http\Controllers\admin;
 
 
-class TestController
-{
+use App\Http\Controllers\Controller;
 
+class TestController extends Controller
+{
+    public function test()
+    {
+        /*$result = DB::connection('mysql_ydfw')->table('user')->get();
+        dump($result);*/
+    }
 }
